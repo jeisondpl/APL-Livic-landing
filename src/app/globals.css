@@ -1,50 +1,44 @@
 @import "tailwindcss";
 
-/* ─── Variables de Tema (Stitch Editorial Voyager) ─── */
+/* ─── Variables de Tema (solo modo claro) ─── */
 :root {
-  --background: #f8f9fa;
-  --foreground: #191c1d;
+  --background: #FFFFFF;
+  --foreground: #0C0A0B;
 
-  --surface-low: #f3f4f5;
-  --surface-default: #edeeef;
-  --surface-high: #e7e8e9;
-  --surface-lowest: #ffffff;
+  --surface-100: #F5F5F5;
+  --surface-200: #F0F0F0;
+  --surface-300: #E0E0E0;
 
-  --text-muted: #524348;
+  --text-muted: #6B7280;
 }
 
 @theme inline {
-  /* Paleta Livic (Stitch Design System) */
-  --color-primary: #914568;
-  --color-primary-container: #e288ae;
-  --color-secondary: #156b4d;
-  --color-secondary-container: #a3f3cd;
-  --color-tertiary: #735c00;
-  --color-tertiary-container: #c69f00;
-  --color-tertiary-fixed: #ffe088;
-  
-  --color-outline: #847278;
-  --color-outline-variant: #d7c1c7;
+  /* Paleta Livic (Fija) */
+  --color-livic-pink: #E288AE;
+  --color-livic-black: #0C0A0B;
+  --color-livic-green: #6AB895;
+  --color-livic-purple: #AD80B4;
+  --color-livic-yellow: #FBCA00;
+  --color-livic-white: #FFFFFF;
 
   /* Aliases Semánticos */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-surface-low: var(--surface-low);
-  --color-surface-default: var(--surface-default);
-  --color-surface-high: var(--surface-high);
-  --color-surface-lowest: var(--surface-lowest);
+  --color-surface-100: var(--surface-100);
+  --color-surface-200: var(--surface-200);
+  --color-surface-300: var(--surface-300);
   --color-text-muted: var(--text-muted);
 
   /* Typography */
-  --font-heading: var(--font-plus-jakarta), sans-serif;
-  --font-body: var(--font-manrope), sans-serif;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
 /* ─── Base reset ─── */
 body {
-  background-color: var(--background);
+  background-color: transparent;
   color: var(--foreground);
-  font-family: var(--font-body), Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
