@@ -2,6 +2,7 @@
   "name": "apl-livic-landing",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev": "next dev -p 3003",
     "build": "next build",
