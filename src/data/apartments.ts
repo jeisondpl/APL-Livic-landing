@@ -862,7 +862,7 @@ const apartment419: Apartment = {
     "Mantener puertas y ventanas del balcón cerradas ante vientos fuertes.",
   ],
 
-  precioNoche: undefined,
+  precioNoche: 190000,
 };
 
 // ─── Fotos del apartamento 620 ───────────────────────────────────────────────
@@ -1467,7 +1467,199 @@ const apartment615: Apartment = {
 
   airbnbCalendarUrl: undefined,
 
-  precioNoche: undefined,
+  precioNoche: 200000,
+};
+
+// ─── Apartamento 931 – Reserva del Mar (On the Beach) ────────────────────────
+// Nota: Usa fotos del edificio Reserva del Mar (mismo edificio que el 915)
+
+const apartment931: Apartment = {
+  slug: "on-the-beach-rdm-931",
+  nombre: "On the Beach Apartment Santa Marta",
+  edificio: "Reserva del Mar",
+  apartamento: "931",
+  piso: 9,
+  tipo: "Apartamento entero",
+
+  huespedes: 6,
+  habitaciones: 3,
+  camas: 3,
+  banos: 2,
+
+  ubicacion: {
+    ciudad: "Gaira",
+    departamento: "Magdalena",
+    pais: "Colombia",
+    lat: 11.1912,
+    lng: -74.2285,
+    cercaDe: "Santa Marta",
+    accesoPlaya: true,
+    distanciaPlayas: "Acceso directo a playas locales de Santa Marta",
+    descripcionUbicacion:
+      "Ubicado en el exclusivo conjunto Reservas del Mar, Cl. 22 #1-67, sector Gaira. A solo 15 minutos del Aeropuerto Simón Bolívar. Vistas impresionantes al océano, al río y a las montañas de la Sierra Nevada. Acceso fácil a playas locales y al Parque Nacional Natural Tayrona.",
+  },
+
+  anfitrionPrincipal: {
+    nombre: "Victor",
+    empresa: "LIVIC",
+    calificacion: 4.88,
+    resenas: 8,
+    anosExperiencia: 1,
+  },
+  coanfitrion: {
+    nombre: "Karen Marin",
+  },
+
+  amenidades: [
+    {
+      titulo: "Dormitorio y Lavandería",
+      icono: "🛏️",
+      items: [
+        { nombre: "Cama King (habitación master)", icono: "Bed" },
+        { nombre: "2 camas Queen (habitaciones 2 y 3)", icono: "Bed" },
+        { nombre: "Sábanas de algodón", icono: "Bed" },
+        { nombre: "Almohadas y mantas adicionales", icono: "Sparkles" },
+        { nombre: "Ganchos para la ropa", icono: "Shirt" },
+        { nombre: "Clósets amplios en cada habitación", icono: "Archive" },
+      ],
+    },
+    {
+      titulo: "Entretenimiento",
+      icono: "📺",
+      items: [
+        { nombre: "TV 60\" LED", icono: "Tv" },
+        { nombre: "Equipo para hacer ejercicio", icono: "Dumbbell" },
+      ],
+    },
+    {
+      titulo: "Climatización",
+      icono: "❄️",
+      items: [
+        { nombre: "Aire acondicionado central", icono: "Wind" },
+        { nombre: "Calefacción central", icono: "Flame" },
+      ],
+    },
+    {
+      titulo: "Internet y Oficina",
+      icono: "📶",
+      items: [
+        { nombre: "WiFi", icono: "Wifi" },
+      ],
+    },
+    {
+      titulo: "Cocina",
+      icono: "🍳",
+      items: [
+        { nombre: "Cocina completa (refrigeradora, horno, fogón)", icono: "ChefHat" },
+        { nombre: "Cocina al aire libre / Parrilla", icono: "Flame" },
+        { nombre: "Cafetera", icono: "Coffee" },
+        { nombre: "Hervidor de agua", icono: "Coffee" },
+        { nombre: "Copas de vino", icono: "Wine" },
+        { nombre: "Platos y cubiertos", icono: "Utensils" },
+        { nombre: "Filtro de agua para toda la casa", icono: "Droplets" },
+      ],
+    },
+    {
+      titulo: "Baños",
+      icono: "🚿",
+      items: [
+        { nombre: "Baño master con doble lavamanos y ducha spa", icono: "Bath" },
+        { nombre: "Baño común con ducha spa", icono: "Droplets" },
+        { nombre: "Agua caliente", icono: "Droplets" },
+        { nombre: "Ducha exterior", icono: "Droplets" },
+      ],
+    },
+    {
+      titulo: "Exterior",
+      icono: "🌊",
+      items: [
+        { nombre: "Balcón con mobiliario para 6 personas", icono: "Sunrise" },
+        { nombre: "Vista al océano, río y montañas", icono: "Mountain" },
+        { nombre: "Acceso a la playa", icono: "Waves" },
+        { nombre: "Mobiliario exterior", icono: "Armchair" },
+        { nombre: "Tumbonas", icono: "Armchair" },
+      ],
+    },
+    {
+      titulo: "Seguridad",
+      icono: "🔒",
+      items: [
+        { nombre: "Detector de humo", icono: "Bell" },
+        { nombre: "Detector de monóxido de carbono", icono: "Bell" },
+        { nombre: "Cámara de seguridad exterior", icono: "Camera" },
+      ],
+    },
+  ],
+
+  servicios: [
+    { etiqueta: "Check-in flexible", disponible: true },
+    { etiqueta: "Reservación inmediata", disponible: true },
+    { etiqueta: "Mascotas permitidas", disponible: true, nota: "Animales de servicio siempre permitidos" },
+    { etiqueta: "Eventos permitidos", disponible: true },
+    { etiqueta: "Agua caliente", disponible: true },
+    { etiqueta: "Estacionamiento gratuito", disponible: true, nota: "1 espacio en las instalaciones" },
+    { etiqueta: "Limpieza durante la estadía", disponible: true },
+  ],
+
+  noIncluidos: [
+    "Secadora",
+  ],
+
+  badges: [
+    "Frente al mar",
+    "Piso 9",
+    "6 huéspedes",
+    "3 habitaciones",
+    "Vista al océano",
+  ],
+
+  heroPhoto: FOTOS_915[0],
+  galeria: FOTOS_915,
+
+  descripcionCorta:
+    "Apartamento de 3 habitaciones y 2 baños en el piso 9 de Reserva del Mar con vistas impresionantes al océano, río y montañas. Ideal para familias y grupos.",
+
+  descripcionLarga:
+    "Ubicado en el exclusivo Reservas del Mar, este apartamento de 3 habitaciones y 2 baños ofrece impresionantes vistas al océano, al río y a las montañas de la Sierra Nevada, desde el piso 9. " +
+    "La habitación master cuenta con cama King, mesas de noche flotantes con cargadores USB y baño en suite con doble lavamanos y ducha spa. Dos habitaciones adicionales con camas Queen. " +
+    "Cocina completa con península, comedor para 4, sala con sofá grande y TV 60\" LED, y un amplio balcón con mobiliario para 6 personas. " +
+    "El edificio ofrece piscina, jacuzzi, gimnasio, parque infantil, parrilla y zonas al aire libre. A solo 15 minutos del aeropuerto y con acceso fácil al Parque Tayrona.",
+
+  frasePosituelo:
+    "Despierta con el mar Caribe a tus pies y la Sierra Nevada en el horizonte.",
+
+  edificioAmenidades: [
+    { nombre: "Piscina", icono: "Waves" },
+    { nombre: "Jacuzzi", icono: "Bath" },
+    { nombre: "Gimnasio", icono: "Dumbbell" },
+    { nombre: "Parque infantil", icono: "Baby" },
+    { nombre: "Cocina al aire libre / Parrilla", icono: "Flame" },
+    { nombre: "Zona de comida al aire libre", icono: "UtensilsCrossed" },
+    { nombre: "Tumbonas", icono: "Armchair" },
+    { nombre: "Ascensor", icono: "ArrowUpDown" },
+    { nombre: "Estacionamiento (1 espacio)", icono: "Car" },
+  ],
+
+  edificioReglas: [
+    { nombre: "Mascotas permitidas", icono: "PawPrint" },
+    { nombre: "Eventos permitidos", icono: "Music" },
+    { nombre: "Fumar permitido (exterior)", icono: "CigaretteOff" },
+    { nombre: "Capacidad máxima 6 huéspedes", icono: "Users" },
+  ],
+
+  checkIn: "3:00 p.m.",
+  checkOut: "11:00 a.m.",
+
+  notas: [
+    "Resort Fee de $57.500 COP por huésped, se paga al llegar. Incluye manilla de acceso al edificio y todas las amenidades. No está incluido en la reserva.",
+    "Estancia mínima de 2 noches, máxima de 14 noches.",
+    "Reserva con mínimo 2 días de anticipación.",
+    "Registro obligatorio en recepción con documento de identidad.",
+  ],
+
+  airbnbCalendarUrl: undefined,
+
+  precioNoche: 450000,
 };
 
 // ─── Exportación del catálogo ─────────────────────────────────────────────────
@@ -1480,4 +1672,5 @@ export const APARTMENTS: Apartment[] = [
   apartment620,
   apartment621,
   apartment615,
+  apartment931,
 ];

@@ -10,6 +10,7 @@ import ServiciosSection from "@/components/landing/ServiciosSection";
 import ValorDiferencialSection from "@/components/landing/ValorDiferencialSection";
 import BeneficiosSection from "@/components/landing/BeneficiosSection";
 import CTASection from "@/components/landing/CTASection";
+import FAQSection from "@/components/landing/FAQSection";
 
 export default function HomePage() {
   return (
@@ -28,6 +29,9 @@ export default function HomePage() {
 
         {/* Beneficios */}
         <BeneficiosSection />
+
+        {/* FAQ + Formulario */}
+        <FAQSection />
 
         {/* CTA Final */}
         <CTASection />
