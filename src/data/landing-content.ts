@@ -22,7 +22,7 @@ export const LANDING_CONTENT = {
       titulo: "Operación de Renta Turística",
       icono: "Home",
       descripcionCorta: "Nos encargamos de toda la gestión de tu propiedad en renta turística",
-      imagen: "/servicio-operacion.jpg",
+      imagen: "/servicio-operacion.jpg", 
       caracteristicas: [
         "Gestión de reservas en plataformas y reservas directas",
         "Atención integral a huéspedes antes, durante y después de la estadía",
