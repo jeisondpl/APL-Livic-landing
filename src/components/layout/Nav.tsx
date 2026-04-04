@@ -72,12 +72,7 @@ export default function Nav() {
         >
           Beneficios
         </a>
-        <Link
-          href={CONFIG.site.catalogoUrl}
-          className="text-sm text-gray-600 font-medium hover:text-livic-green transition-colors duration-200"
-        >
-          Catálogo
-        </Link>
+        
       </div>
 
       {/* WhatsApp link */}
