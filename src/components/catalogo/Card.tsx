@@ -53,7 +53,8 @@ export default function Card({ apartment }: CardProps) {
                   alt={foto.alt}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 400px"
+                  quality={85}
                   priority={i === 0}
                 />
               </div>
@@ -63,7 +64,13 @@ export default function Card({ apartment }: CardProps) {
           {/* Badge top-left */}
           <div className="absolute top-5 left-5 z-10">
             <span className="bg-white px-5 py-2.5 rounded-[1.25rem] shadow-sm text-livic-pink font-bold text-sm">
-              Top Rated
+              Apto. {apartment.apartamento} {
+                apartment.edificio === "Salguero Suite" ? "SS" :
+                apartment.edificio === "Salguero Park" ? "SP" :
+                apartment.edificio === "Reserva del Mar 2" ? "Rdm2" :
+                apartment.edificio === "Reserva del Mar" ? "Rdm" :
+                ""
+              }
             </span>
           </div>
 

@@ -561,7 +561,7 @@ const apartment519: Apartment = {
   huespedes: 3,
   habitaciones: 1,
   camas: 2,
-  banos: 1,
+  banos: 1, 
 
   ubicacion: {
     ciudad: "Gaira",
@@ -865,6 +865,611 @@ const apartment419: Apartment = {
   precioNoche: undefined,
 };
 
+// ─── Fotos del apartamento 620 ───────────────────────────────────────────────
+
+const BASE_620 = "/source/rdm2-620";
+
+const FOTOS_620: ApartmentPhoto[] = [
+  { src: `${BASE_620}/Sin-título-1.jpg`, alt: "Vista general del loft 620 - Reserva del Mar 2" },
+  { src: `${BASE_620}/Sin-título-3.jpg`, alt: "Sala y zona social del apartaestudio" },
+  { src: `${BASE_620}/Sin-título-4.jpg`, alt: "Cocina equipada del loft" },
+  { src: `${BASE_620}/Sin-título-5.jpg`, alt: "Habitación con camas del apartaestudio" },
+  { src: `${BASE_620}/Sin-título-7.jpg`, alt: "Baño completo del apartamento" },
+  { src: `${BASE_620}/Sin-título-8.jpg`, alt: "Zona de trabajo privada" },
+  { src: `${BASE_620}/Sin-título-9.jpg`, alt: "Balcón con vista a las montañas" },
+  { src: `${BASE_620}/Sin-título-10.jpg`, alt: "Vista panorámica desde el piso 6" },
+  { src: `${BASE_620}/image.png`, alt: "Piscina principal del edificio Reserva del Mar 2" },
+  { src: `${BASE_620}/image copy.png`, alt: "Gimnasio equipado del edificio" },
+  { src: `${BASE_620}/image copy 2.png`, alt: "Sala de juegos con billar y ping pong" },
+  { src: `${BASE_620}/IMG_4730.jpg`, alt: "Exterior del edificio Reserva del Mar 2" },
+  { src: `${BASE_620}/IMG_4732.jpg`, alt: "Lobby estilo hotelero del edificio" },
+  { src: `${BASE_620}/terraza.jpg`, alt: "Terraza y zona social del edificio" },
+  { src: `${BASE_620}/zona aseo.jpg`, alt: "Área de lavado con lavadora" },
+];
+
+// ─── Apartamento 620 – Reserva del Mar 2 ────────────────────────────────────
+
+const apartment620: Apartment = {
+  slug: "loft-vista-rdm2-620",
+  nombre: "Loft con Vista, WiFi, A/C y Piscina",
+  edificio: "Reserva del Mar 2",
+  apartamento: "620",
+  piso: 6,
+  tipo: "Apartaestudio tipo Loft",
+
+  huespedes: 4,
+  habitaciones: 1,
+  camas: 3,
+  banos: 1,
+
+  ubicacion: {
+    ciudad: "Gaira",
+    departamento: "Magdalena",
+    pais: "Colombia",
+    lat: 11.1912,
+    lng: -74.2285,
+    cercaDe: "Santa Marta",
+    accesoPlaya: true,
+    distanciaPlayas: "~6 minutos caminando (Playa de Gaira)",
+    descripcionUbicacion:
+      "Ubicado en Reserva del Mar 2, Cra. 2 #20-134, sector Gaira. Zona segura y de alto nivel, rodeada de gastronomía y entretenimiento. La Playa de Gaira está a aproximadamente 6 minutos caminando.",
+  },
+
+  anfitrionPrincipal: {
+    nombre: "Sonia Patricia",
+    empresa: "LIVIC",
+    calificacion: 5.0,
+    resenas: 12,
+    anosExperiencia: 1,
+  },
+
+  amenidades: [
+    {
+      titulo: "Dormitorio y Lavandería",
+      icono: "🛏️",
+      items: [
+        { nombre: "Lavadora", icono: "WashingMachine" },
+        { nombre: "Ganchos para la ropa", icono: "Shirt" },
+        { nombre: "Sábanas de algodón", icono: "Bed" },
+        { nombre: "Almohadas y mantas adicionales", icono: "Sparkles" },
+        { nombre: "Espacio para guardar ropa (clóset)", icono: "Archive" },
+        { nombre: "Plancha", icono: "Shirt" },
+        { nombre: "Tendedero de ropa", icono: "Shirt" },
+      ],
+    },
+    {
+      titulo: "Entretenimiento",
+      icono: "📺",
+      items: [
+        { nombre: "TV", icono: "Tv" },
+      ],
+    },
+    {
+      titulo: "Climatización",
+      icono: "❄️",
+      items: [
+        { nombre: "Aire acondicionado", icono: "Wind" },
+      ],
+    },
+    {
+      titulo: "Internet y Oficina",
+      icono: "📶",
+      items: [
+        { nombre: "WiFi de alta velocidad (900 Mbps)", icono: "Wifi" },
+        { nombre: "Zona de trabajo privada", icono: "Laptop" },
+      ],
+    },
+    {
+      titulo: "Cocina",
+      icono: "🍳",
+      items: [
+        { nombre: "Cocina completa (refrigeradora, horno, fogón)", icono: "ChefHat" },
+        { nombre: "Microondas", icono: "Microwave" },
+        { nombre: "Cafetera de filtro", icono: "Coffee" },
+        { nombre: "Licuadora", icono: "Blend" },
+        { nombre: "Arrocera", icono: "UtensilsCrossed" },
+        { nombre: "Utensilios básicos para cocinar", icono: "UtensilsCrossed" },
+        { nombre: "Platos y cubiertos", icono: "Utensils" },
+        { nombre: "Copas de vino", icono: "Wine" },
+      ],
+    },
+    {
+      titulo: "Baño",
+      icono: "🚿",
+      items: [
+        { nombre: "Agua caliente (lavabo y ducha)", icono: "Droplets" },
+        { nombre: "Acondicionador", icono: "Sparkles" },
+        { nombre: "Jabón corporal", icono: "Sparkles" },
+        { nombre: "Ducha exterior", icono: "Droplets" },
+      ],
+    },
+    {
+      titulo: "Exterior",
+      icono: "🌊",
+      items: [
+        { nombre: "Balcón con vista a montañas y ciudad (piso 6)", icono: "Sunrise" },
+        { nombre: "Entrada independiente", icono: "DoorOpen" },
+      ],
+    },
+  ],
+
+  servicios: [
+    { etiqueta: "Check-in flexible", disponible: true, nota: "El mismo día" },
+    { etiqueta: "Estadías largas", disponible: true, nota: "Desde 28 días con 25% de descuento" },
+    { etiqueta: "Reservación inmediata", disponible: true, nota: "Reserva automática sin espera" },
+    { etiqueta: "Mascotas permitidas", disponible: true, nota: "Sujeto a normativas locales" },
+    { etiqueta: "Agua caliente", disponible: true },
+    { etiqueta: "Estacionamiento gratuito", disponible: true, nota: "En las instalaciones del edificio" },
+  ],
+
+  noIncluidos: [
+    "Detector de monóxido de carbono",
+    "Calefacción",
+  ],
+
+  badges: [
+    "Vista a montañas",
+    "Piso 6",
+    "4 huéspedes",
+    "WiFi 900 Mbps",
+    "Piscina",
+  ],
+
+  heroPhoto: FOTOS_620[0],
+  galeria: FOTOS_620,
+
+  descripcionCorta:
+    "Elegante apartaestudio tipo loft de 36 m² en el piso 6 de Reserva del Mar 2. Ideal para viajes de negocios, trabajo remoto, parejas y familias pequeñas.",
+
+  descripcionLarga:
+    "Moderno y elegante apartaestudio ubicado en el piso 6, a solo 6 minutos caminando a la Playa de Gaira. " +
+    "Ofrece vista a la montaña y parcial a la ciudad, ideal para el descanso. El espacio está totalmente equipado con internet de alta velocidad (900 Mbps) y aire acondicionado. " +
+    "El edificio cuenta con piscina, jacuzzi, gimnasio equipado, sauna, coworking, sala de juegos con mesa de ping pong y billar, y lobby estilo hotelero. " +
+    "Zona segura y de alto nivel, rodeada de gastronomía y entretenimiento.",
+
+  frasePosituelo:
+    "Tu espacio ideal para desconectar, trabajar o simplemente disfrutar de Santa Marta.",
+
+  edificioAmenidades: [
+    { nombre: "Piscina principal", icono: "Waves" },
+    { nombre: "Jacuzzi", icono: "Bath" },
+    { nombre: "Gimnasio equipado", icono: "Dumbbell" },
+    { nombre: "Sauna", icono: "Wind" },
+    { nombre: "Coworking", icono: "Network" },
+    { nombre: "Sala de juegos (ping pong y billar)", icono: "Gamepad2" },
+    { nombre: "Ascensor", icono: "ArrowUpDown" },
+    { nombre: "Estacionamiento gratuito", icono: "Car" },
+    { nombre: "Lobby estilo hotelero", icono: "Building" },
+  ],
+
+  edificioReglas: [
+    { nombre: "Prohibido fumar dentro del apartamento", icono: "CigaretteOff" },
+    { nombre: "No se permiten fiestas ni música en volumen alto", icono: "Music" },
+    { nombre: "No se permiten visitantes no registrados", icono: "Users" },
+    { nombre: "No abrir ventanal con A/C encendido", icono: "Wind" },
+    { nombre: "Toallas de uso interno exclusivamente", icono: "Shirt" },
+  ],
+
+  checkIn: "3:00 p.m.",
+  checkOut: "11:00 a.m.",
+
+  notas: [
+    "Llegar a portería, registrarse con nombre y número de reserva.",
+    "Adquirir manilla de acceso en recepción (monto pendiente — solo tarjeta, no incluida en la reserva).",
+    "Al confirmar la reserva se solicita información de todos los huéspedes para la autorización de ingreso.",
+    "Los mayores de 9 años deben pagar manilla. Todo menor debe ingresar acompañado de sus padres o con autorización firmada.",
+    "La basura debe depositarse en el shut ubicado al fondo del pasillo, a mano derecha.",
+    "Edificio nuevo — el coworking no tiene internet por el momento.",
+  ],
+
+  precioNoche: 199090,
+};
+
+// ─── Fotos del apartamento 621 ───────────────────────────────────────────────
+
+const BASE_621 = "/source/rdm2-621";
+
+const FOTOS_621: ApartmentPhoto[] = [
+  { src: `${BASE_621}/Sin-título-1.jpg`, alt: "Vista general del Loft Premium 621" },
+  { src: `${BASE_621}/Sin-título-2.jpg`, alt: "Sala y zona social del loft" },
+  { src: `${BASE_621}/Sin-título-4.jpg`, alt: "Cocina equipada del apartaestudio" },
+  { src: `${BASE_621}/Sin-título-5.jpg`, alt: "Habitación con camas del loft" },
+  { src: `${BASE_621}/Sin-título-6.jpg`, alt: "Baño completo del apartamento" },
+  { src: `${BASE_621}/Sin-título-7.jpg`, alt: "Zona de trabajo con escritorio" },
+  { src: `${BASE_621}/Sin-título-8.jpg`, alt: "Balcón con vista a montañas y ciudad" },
+  { src: `${BASE_621}/Sin-título-11.jpg`, alt: "Vista panorámica desde el piso 6" },
+  { src: `${BASE_621}/Sin-título-13.jpg`, alt: "Detalle del espacio interior" },
+  { src: `${BASE_621}/aaa-HDR.jpg`, alt: "Vista HDR del apartamento" },
+  { src: `${BASE_621}/IMG_4847.jpg`, alt: "Exterior del edificio Reserva del Mar 2" },
+  { src: `${BASE_621}/Gemini_Generated_Image_xu8f7cxu8f7cxu8f.jpg`, alt: "Piscina y áreas comunes del edificio" },
+];
+
+// ─── Apartamento 621 – Reserva del Mar 2 (Loft Premium) ─────────────────────
+
+const apartment621: Apartment = {
+  slug: "loft-premium-rdm2-621",
+  nombre: "Loft Premium con Vista, WiFi 900 Mbps, A/C y Parking",
+  edificio: "Reserva del Mar 2",
+  apartamento: "621",
+  piso: 6,
+  tipo: "Apartaestudio tipo Loft",
+
+  huespedes: 4,
+  habitaciones: 1,
+  camas: 3,
+  banos: 1,
+
+  ubicacion: {
+    ciudad: "Gaira",
+    departamento: "Magdalena",
+    pais: "Colombia",
+    lat: 11.1912,
+    lng: -74.2285,
+    cercaDe: "Santa Marta",
+    accesoPlaya: true,
+    distanciaPlayas: "~6 minutos caminando (Playa de Gaira)",
+    descripcionUbicacion:
+      "Ubicado en Reserva del Mar 2, Cra. 2 #20-134, sector Gaira. Zona segura y estratégica, cerca de restaurantes y comercios. La Playa de Gaira está a aproximadamente 6 minutos caminando.",
+  },
+
+  anfitrionPrincipal: {
+    nombre: "Sonia Patricia",
+    empresa: "LIVIC",
+    calificacion: 5.0,
+    resenas: 12,
+    anosExperiencia: 1,
+  },
+  coanfitrion: {
+    nombre: "Richard Cabezas",
+  },
+
+  amenidades: [
+    {
+      titulo: "Dormitorio y Lavandería",
+      icono: "🛏️",
+      items: [
+        { nombre: "Lavadora", icono: "WashingMachine" },
+        { nombre: "Ganchos para la ropa", icono: "Shirt" },
+        { nombre: "Sábanas", icono: "Bed" },
+        { nombre: "Almohadas y mantas adicionales", icono: "Sparkles" },
+        { nombre: "Espacio para guardar ropa", icono: "Archive" },
+        { nombre: "Plancha", icono: "Shirt" },
+        { nombre: "Tendedero de ropa", icono: "Shirt" },
+      ],
+    },
+    {
+      titulo: "Entretenimiento",
+      icono: "📺",
+      items: [
+        { nombre: "TV", icono: "Tv" },
+      ],
+    },
+    {
+      titulo: "Climatización",
+      icono: "❄️",
+      items: [
+        { nombre: "Aire acondicionado central", icono: "Wind" },
+      ],
+    },
+    {
+      titulo: "Internet y Oficina",
+      icono: "📶",
+      items: [
+        { nombre: "WiFi de alta velocidad (900 Mbps)", icono: "Wifi" },
+        { nombre: "Zona de trabajo con escritorio y enchufe", icono: "Laptop" },
+      ],
+    },
+    {
+      titulo: "Cocina",
+      icono: "🍳",
+      items: [
+        { nombre: "Cocina completa (refrigeradora, horno, fogón)", icono: "ChefHat" },
+        { nombre: "Microondas", icono: "Microwave" },
+        { nombre: "Cafetera", icono: "Coffee" },
+        { nombre: "Licuadora", icono: "Blend" },
+        { nombre: "Arrocera", icono: "UtensilsCrossed" },
+        { nombre: "Utensilios básicos para cocinar", icono: "UtensilsCrossed" },
+        { nombre: "Platos y cubiertos", icono: "Utensils" },
+        { nombre: "Copas de vino", icono: "Wine" },
+      ],
+    },
+    {
+      titulo: "Baño",
+      icono: "🚿",
+      items: [
+        { nombre: "Agua caliente (lavabo y ducha)", icono: "Droplets" },
+        { nombre: "Acondicionador", icono: "Sparkles" },
+        { nombre: "Jabón corporal", icono: "Sparkles" },
+        { nombre: "Ducha exterior", icono: "Droplets" },
+      ],
+    },
+    {
+      titulo: "Exterior",
+      icono: "🌊",
+      items: [
+        { nombre: "Balcón con vista a montañas y ciudad (piso 6)", icono: "Sunrise" },
+        { nombre: "Entrada independiente", icono: "DoorOpen" },
+        { nombre: "Estacionamiento gratuito", icono: "Car" },
+      ],
+    },
+  ],
+
+  servicios: [
+    { etiqueta: "Auto check-in", disponible: true, nota: "Cerradura digital con código" },
+    { etiqueta: "Estadías largas", disponible: true, nota: "Desde 28 días con 25% de descuento" },
+    { etiqueta: "Reservación inmediata", disponible: true, nota: "Reserva automática sin espera" },
+    { etiqueta: "Mascotas permitidas", disponible: true, nota: "Animales de servicio permitidos" },
+    { etiqueta: "Agua caliente", disponible: true },
+    { etiqueta: "Estacionamiento gratuito", disponible: true, nota: "En las instalaciones del edificio" },
+    { etiqueta: "Fotografía y filmación comercial", disponible: true },
+  ],
+
+  noIncluidos: [
+    "Detector de monóxido de carbono",
+    "Calefacción",
+  ],
+
+  badges: [
+    "Loft Premium",
+    "Piso 6",
+    "4 huéspedes",
+    "WiFi 900 Mbps",
+    "Parking incluido",
+  ],
+
+  heroPhoto: FOTOS_621[0],
+  galeria: FOTOS_621,
+
+  descripcionCorta:
+    "Loft moderno de 36 m² en piso alto con auto check-in, parking gratuito y WiFi de 900 Mbps. Perfecto para escapadas, viajes de trabajo o estadías cortas y largas.",
+
+  descripcionLarga:
+    "Moderno apartaestudio tipo loft ubicado en el piso 6, diseñado en un solo ambiente abierto que integra sala, cama y cocina. " +
+    "Completamente dotado con cocina equipada, utensilios básicos, ropa de cama, toallas, aire acondicionado central y conexión a internet de alta velocidad (900 Mbps). " +
+    "Vista a la montaña y parcial a la ciudad. A 6 minutos caminando de la Playa de Gaira. " +
+    "El edificio cuenta con piscina, jacuzzi, gimnasio equipado, sauna, coworking y lobby estilo hotelero. " +
+    "Zona segura y estratégica, cerca de restaurantes y comercios.",
+
+  frasePosituelo:
+    "Loft premium para quienes buscan comodidad, conectividad y estilo en Santa Marta.",
+
+  edificioAmenidades: [
+    { nombre: "Piscina", icono: "Waves" },
+    { nombre: "Jacuzzi", icono: "Bath" },
+    { nombre: "Gimnasio equipado", icono: "Dumbbell" },
+    { nombre: "Sauna", icono: "Wind" },
+    { nombre: "Coworking", icono: "Network" },
+    { nombre: "Ascensor", icono: "ArrowUpDown" },
+    { nombre: "Estacionamiento gratuito", icono: "Car" },
+    { nombre: "Lobby estilo hotelero", icono: "Building" },
+    { nombre: "Portería y control de ingreso", icono: "Shield" },
+  ],
+
+  edificioReglas: [
+    { nombre: "Prohibido fumar dentro del apartamento", icono: "CigaretteOff" },
+    { nombre: "No se permiten fiestas ni música en volumen alto", icono: "Music" },
+    { nombre: "No se permiten visitantes no registrados", icono: "Users" },
+    { nombre: "No abrir ventanal con A/C encendido", icono: "Wind" },
+    { nombre: "Toallas de uso interno exclusivamente", icono: "Shirt" },
+    { nombre: "Daños por viento en puertas los cubre el huésped", icono: "AlertTriangle" },
+  ],
+
+  checkIn: "3:00 p.m.",
+  checkOut: "11:00 a.m.",
+
+  notas: [
+    "Registro en recepción con documento de identidad.",
+    "Auto check-in con cerradura digital — código enviado antes de la llegada.",
+    "Adquirir manilla de acceso en recepción (monto pendiente — solo tarjeta, no incluida en la reserva).",
+    "Al confirmar la reserva se solicita información de todos los huéspedes para autorización de ingreso.",
+    "Mayores de 9 años deben pagar manilla. Menores deben ingresar con padres o autorización firmada.",
+    "Basura en el shut al fondo del pasillo, a mano derecha.",
+    "Edificio nuevo — el coworking no tiene internet por el momento.",
+  ],
+
+  precioNoche: 199000,
+};
+
+// ─── Fotos del apartamento SS615 ─────────────────────────────────────────────
+
+const BASE_615 = "/source/SS615";
+
+const FOTOS_615: ApartmentPhoto[] = [
+  { src: `${BASE_615}/Sin-título-1.jpg`, alt: "Vista general de la suite 615 con cama King" },
+  { src: `${BASE_615}/Sin-título-2.jpg`, alt: "Cama Murphy abatible tamaño Queen" },
+  { src: `${BASE_615}/Sin-título-3.jpg`, alt: "Sala y zona social de la suite" },
+  { src: `${BASE_615}/Sin-título-4.jpg`, alt: "Cocina equipada de la suite" },
+  { src: `${BASE_615}/Sin-título-5.jpg`, alt: "Comedor y área de cocina" },
+  { src: `${BASE_615}/Sin-título-6.jpg`, alt: "Baño completo de la suite" },
+  { src: `${BASE_615}/Sin-título-7.jpg`, alt: "Balcón con vista a las montañas" },
+  { src: `${BASE_615}/Sin-título-8.jpg`, alt: "Detalle del espacio interior" },
+  { src: `${BASE_615}/Sin-título-9.jpg`, alt: "Vista panorámica desde el balcón" },
+  { src: `${BASE_615}/IMG_2733.jpg`, alt: "Piscina del edificio Salguero Suite" },
+  { src: `${BASE_615}/IMG_2734.jpg`, alt: "Zona de piscina y áreas comunes" },
+  { src: `${BASE_615}/IMG_2784.jpg`, alt: "Gimnasio del edificio" },
+  { src: `${BASE_615}/IMG_2791.jpg`, alt: "Jacuzzi y zona húmeda" },
+  { src: `${BASE_615}/IMG_2793.jpg`, alt: "Rooftop y terraza del edificio" },
+  { src: `${BASE_615}/IMG_2795.jpg`, alt: "Exterior del edificio Salguero Suite" },
+];
+
+// ─── Apartamento SS615 – Salguero Suite ──────────────────────────────────────
+
+const apartment615: Apartment = {
+  slug: "suite-balcon-playa-ss615",
+  nombre: "Suite con Balcón, Piscina y a Pasos de la Playa",
+  edificio: "Salguero Suite",
+  apartamento: "615",
+  piso: 6,
+  tipo: "Suite tipo Loft",
+
+  huespedes: 3,
+  habitaciones: 1,
+  camas: 2,
+  banos: 1,
+
+  ubicacion: {
+    ciudad: "Gaira",
+    departamento: "Magdalena",
+    pais: "Colombia",
+    lat: 11.1875643,
+    lng: -74.2312825,
+    cercaDe: "Santa Marta",
+    accesoPlaya: true,
+    distanciaPlayas: "A pocos minutos caminando (Playa Salguero)",
+    descripcionUbicacion:
+      "Ubicado en Salguero Suite, sector Gaira. Nueva zona moderna de rápido crecimiento. Playa Salguero a pocos minutos caminando, zona de Rodadero a ±10 minutos. Hay pocos restaurantes alrededor, pero buenos.",
+  },
+
+  anfitrionPrincipal: {
+    nombre: "Veronica",
+    empresa: "LIVIC",
+    calificacion: 4.78,
+    resenas: 54,
+    anosExperiencia: 2,
+  },
+  coanfitrion: {
+    nombre: "Lina Villalba",
+  },
+
+  amenidades: [
+    {
+      titulo: "Dormitorio y Lavandería",
+      icono: "🛏️",
+      items: [
+        { nombre: "Cama King", icono: "Bed" },
+        { nombre: "Cama Murphy/abatible Queen", icono: "Bed" },
+        { nombre: "Lavadora", icono: "WashingMachine" },
+        { nombre: "Plancha", icono: "Shirt" },
+      ],
+    },
+    {
+      titulo: "Entretenimiento",
+      icono: "📺",
+      items: [
+        { nombre: "TV", icono: "Tv" },
+        { nombre: "Mesa de billar (área común)", icono: "Gamepad2" },
+      ],
+    },
+    {
+      titulo: "Climatización",
+      icono: "❄️",
+      items: [
+        { nombre: "Aire acondicionado", icono: "Wind" },
+      ],
+    },
+    {
+      titulo: "Internet y Oficina",
+      icono: "📶",
+      items: [
+        { nombre: "WiFi", icono: "Wifi" },
+      ],
+    },
+    {
+      titulo: "Cocina",
+      icono: "🍳",
+      items: [
+        { nombre: "Cocina completa", icono: "ChefHat" },
+        { nombre: "Refrigerador", icono: "Refrigerator" },
+        { nombre: "Utensilios básicos para cocinar", icono: "UtensilsCrossed" },
+        { nombre: "Platos y cubiertos", icono: "Utensils" },
+      ],
+    },
+    {
+      titulo: "Exterior",
+      icono: "🌊",
+      items: [
+        { nombre: "Balcón con vista a las montañas", icono: "Sunrise" },
+        { nombre: "Acceso a la playa", icono: "Waves" },
+      ],
+    },
+    {
+      titulo: "Familia",
+      icono: "👨‍👩‍👧",
+      items: [
+        { nombre: "Parque infantil al aire libre", icono: "Baby" },
+      ],
+    },
+    {
+      titulo: "Seguridad",
+      icono: "🔒",
+      items: [
+        { nombre: "Botiquín de primeros auxilios", icono: "Cross" },
+        { nombre: "Caja de seguridad con llaves", icono: "KeyRound" },
+      ],
+    },
+  ],
+
+  servicios: [
+    { etiqueta: "Check-in autónomo", disponible: true, nota: "Caja de seguridad con llaves" },
+    { etiqueta: "El anfitrión te recibe", disponible: true },
+    { etiqueta: "Estacionamiento gratuito", disponible: true, nota: "Sujeto a disponibilidad, sin reserva" },
+    { etiqueta: "Mascotas permitidas", disponible: false },
+    { etiqueta: "Agua caliente", disponible: false },
+  ],
+
+  noIncluidos: [
+    "Secadora",
+    "Detector de humo",
+    "Detector de monóxido de carbono",
+    "Cámaras de seguridad exterior",
+  ],
+
+  badges: [
+    "A pasos de la playa",
+    "Vista a montañas",
+    "Piscina",
+    "3 huéspedes",
+    "Cama King",
+  ],
+
+  heroPhoto: FOTOS_615[0],
+  galeria: FOTOS_615,
+
+  descripcionCorta:
+    "Elegante suite de 32 m² con balcón, cama King y cama Murphy Queen. A pocos minutos de Playa Salguero con acceso a piscina, jacuzzi, sauna y gimnasio.",
+
+  descripcionLarga:
+    "Te damos la bienvenida a tu elegante retiro en la playa en Santa Marta. Suite de 32 m² cuidadosamente diseñada con una espaciosa cama King para un sueño reparador y una acogedora cama Murphy tamaño Queen para huéspedes adicionales. " +
+    "Cocina totalmente equipada, WiFi, TV y aire acondicionado. Acceso completo a piscina, turco, sauna, jacuzzi, gimnasio, salón de juegos con mesa de billar, parque infantil y rooftop. " +
+    "Relájate a pocos minutos de la tranquila Playa Salguero y a solo 10 minutos de la vibrante zona de Rodadero. Comienza el día con un café en el balcón con vista a las montañas.",
+
+  frasePosituelo:
+    "Tu retiro elegante a pasos de la playa, con todo lo que necesitas para descansar.",
+
+  edificioAmenidades: [
+    { nombre: "Piscina", icono: "Waves" },
+    { nombre: "Jacuzzi", icono: "Bath" },
+    { nombre: "Turco / Baño turco", icono: "Wind" },
+    { nombre: "Sauna", icono: "Wind" },
+    { nombre: "Gimnasio", icono: "Dumbbell" },
+    { nombre: "Salón de juegos (mesa de billar)", icono: "Gamepad2" },
+    { nombre: "Parque infantil", icono: "Baby" },
+    { nombre: "Rooftop / Terraza", icono: "Sunrise" },
+    { nombre: "Ascensor", icono: "ArrowUpDown" },
+    { nombre: "Estacionamiento (sujeto a disponibilidad)", icono: "Car" },
+  ],
+
+  edificioReglas: [
+    { nombre: "No se permiten fiestas", icono: "Music" },
+    { nombre: "Capacidad máxima 3 huéspedes", icono: "Users" },
+    { nombre: "Manilla obligatoria $20.000 COP por persona", icono: "Ticket" },
+  ],
+
+  checkIn: "3:00 p.m.",
+  checkOut: "11:00 a.m.",
+
+  notas: [
+    "Llegada autónoma mediante caja de seguridad con llaves. El anfitrión también puede recibirte.",
+    "Se cobra manilla de $20.000 COP por persona, no incluida en el precio de la reserva.",
+    "Hay parqueadero en el edificio, pero no es posible reservarlo. En caso de no encontrar lugar, se puede parquear en los alrededores.",
+    "Registro obligatorio en recepción con documento de identidad.",
+  ],
+
+  airbnbCalendarUrl: undefined,
+
+  precioNoche: undefined,
+};
+
 // ─── Exportación del catálogo ─────────────────────────────────────────────────
 
 export const APARTMENTS: Apartment[] = [
@@ -872,4 +1477,7 @@ export const APARTMENTS: Apartment[] = [
   apartment419,
   apartment1008,
   apartment915,
+  apartment620,
+  apartment621,
+  apartment615,
 ];

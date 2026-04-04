@@ -108,16 +108,29 @@ export default function Footer() {
             </ul>
 
             {/* Redes sociales */}
-            <div className="flex items-center gap-4 mt-6">
+            <div className="flex flex-col gap-3 mt-6">
               {CONFIG.social.instagram && (
                 <a
                   href={CONFIG.social.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-livic-pink transition-colors"
-                  aria-label="Instagram"
+                  className="flex items-center gap-2 text-sm text-gray-300 hover:text-livic-pink transition-colors"
                 >
                   <Instagram className="w-5 h-5" />
+                  Instagram
+                </a>
+              )}
+              {CONFIG.social["tik-tok"] && (
+                <a
+                  href={CONFIG.social["tik-tok"]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sm text-gray-300 hover:text-livic-pink transition-colors"
+                >
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.88a8.28 8.28 0 0 0 4.76 1.5V6.93a4.85 4.85 0 0 1-1-.24z"/>
+                  </svg>
+                  TikTok
                 </a>
               )}
             </div>

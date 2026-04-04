@@ -274,7 +274,7 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
         className="flex items-center justify-between mb-6"
       >
         <Link
-          href="/catalogo"
+          href="/catalogo#alojamientos"
           className="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-livic-pink transition-colors"
         >
           <ChevronLeft size={18} />

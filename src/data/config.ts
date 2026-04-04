@@ -14,7 +14,7 @@ export const CONFIG = {
 
   social: {
     instagram: "https://www.instagram.com/livic.aptos?igsh=dnZlMDM2eWJtYnFz",
-    "tik-tok": "https://"
+    "tik-tok": "https://www.tiktok.com/@livic.aptos?_r=1&_t=ZS-94m9RNopicx"
     // Agregar redes reales cuando estén disponibles
   },
 
