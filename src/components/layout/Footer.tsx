@@ -5,7 +5,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, MessageCircle, Instagram, Facebook } from "lucide-react";
+import { Mail, MessageCircle, Instagram } from "lucide-react";
 import { getWhatsAppLink } from "@/lib/utils";
 import { CONFIG } from "@/data/config";
 
@@ -118,17 +118,6 @@ export default function Footer() {
                   aria-label="Instagram"
                 >
                   <Instagram className="w-5 h-5" />
-                </a>
-              )}
-              {CONFIG.social.facebook && (
-                <a
-                  href={CONFIG.social.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-livic-pink transition-colors"
-                  aria-label="Facebook"
-                >
-                  <Facebook className="w-5 h-5" />
                 </a>
               )}
             </div>

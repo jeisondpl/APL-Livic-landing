@@ -14,7 +14,7 @@ export default function ValorDiferencialSection() {
   return (
     <Section
       id="valor"
-      titulo="Por qué elegir LIVIC"
+      titulo="Por qué elegir Alojate con LIVIC"
       subtitulo="Nuestra experiencia y compromiso nos hacen diferentes"
       acento="purple"
       centrado

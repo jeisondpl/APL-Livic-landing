@@ -6,15 +6,15 @@
 export const CONFIG = {
   contact: {
     whatsapp: {
-      number: "573000000000", // TODO: Actualizar con número real de LIVIC
+      number: "573126263634", // TODO: Actualizar con número real de LIVIC
       message: "Hola LIVIC, quiero más información sobre sus servicios de operación turística"
     },
-    email: "contacto@livic.co", // TODO: Actualizar con email real
+    email: "apartamentos.livic@gmail.com", // TODO: Actualizar con email real
   },
 
   social: {
-    instagram: "https://instagram.com/livic.co",
-    facebook: "https://facebook.com/livic.co",
+    instagram: "https://www.instagram.com/livic.aptos?igsh=dnZlMDM2eWJtYnFz",
+    "tik-tok": "https://"
     // Agregar redes reales cuando estén disponibles
   },
 
@@ -23,6 +23,6 @@ export const CONFIG = {
     tagline: "Tranquilidad para ti, cuidado total para tu inmueble",
     description: "Operación turística, acompañamiento y cuidado de inmuebles en Santa Marta",
     url: "https://livic.co",
-    catalogoUrl: "http://localhost:3002" // URL del catálogo de apartamentos
+    catalogoUrl: "/catalogo" // Ruta interna del catálogo de apartamentos
   }
 };
