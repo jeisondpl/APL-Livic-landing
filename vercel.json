@@ -4,6 +4,16 @@
   "outputDirectory": ".next",
   "framework": "nextjs",
   "regions": ["gru1"],
+  "rewrites": [
+    {
+      "source": "/pms",
+      "destination": "https://livic-pms-jeisondiazs-projects.vercel.app/pms"
+    },
+    {
+      "source": "/pms/:path*",
+      "destination": "https://livic-pms-jeisondiazs-projects.vercel.app/pms/:path*"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
