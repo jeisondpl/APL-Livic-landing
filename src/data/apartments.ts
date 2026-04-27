@@ -120,6 +120,12 @@ export interface Apartment {
 
   // ── Airbnb calendar
   airbnbCalendarUrl?: string;
+
+  // ── Integración con API LIVIC (cotizador "Cotiza tu estadía")
+  /** Slug del apartamento en la API LIVIC. Cuando está presente, la página
+   *  habilita el cotizador en tiempo real con pricing vigente. Si es undefined
+   *  el cotizador no aparece. Puede diferir del `slug` del catálogo. */
+  apiSlug?: string;
 }
 
 // ─── Fotos del apartamento 1008 ──────────────────────────────────────────────
@@ -552,6 +558,7 @@ const FOTOS_519: ApartmentPhoto[] = [
 
 const apartment519: Apartment = {
   slug: "estudio-moderno-519",
+  apiSlug: "519-519",
   nombre: "Estudio Moderno 519 | Vista Sierra Nevada | Piso 5",
   edificio: "Salguero Park",
   apartamento: "519",
@@ -722,6 +729,7 @@ const FOTOS_419: ApartmentPhoto[] = [
 
 const apartment419: Apartment = {
   slug: "estudio-luminoso-rdm2-419",
+  apiSlug: "419-reserva-ii-419",
   nombre: "Estudio Luminoso | 3 min Playa | Sierra+Mar",
   edificio: "Reserva del Mar II",
   apartamento: "419",

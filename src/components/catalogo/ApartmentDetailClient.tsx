@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import type { Apartment } from '@/data/apartments'
 import AvailabilityBar from '@/components/catalogo/AvailabilityBar'
+import Cotizador from '@/components/catalogo/Cotizador'
 
 // ── Variantes de animación ────────────────────────────────────────────────────
 
@@ -524,6 +525,17 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
               <button className="w-full mt-2 bg-livic-black text-white font-bold py-4 rounded-[2rem] hover:bg-livic-pink transition-colors text-sm">
                 Consultar disponibilidad
               </button>
+
+              {/* Cotiza tu estadía — solo si el apartamento está sincronizado con la API LIVIC */}
+              {apartment.apiSlug && (
+                <div className="mt-6">
+                  <Cotizador
+                    apiSlug={apartment.apiSlug}
+                    huespedesMaximos={apartment.huespedes}
+                    nochesMinimas={2}
+                  />
+                </div>
+              )}
 
               {/* Badges del apartamento */}
               {apartment.badges.length > 0 && (

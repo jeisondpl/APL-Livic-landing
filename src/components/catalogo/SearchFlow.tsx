@@ -8,14 +8,12 @@
  */
 
 import { useState, useEffect, useRef } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
 import { motion } from 'framer-motion'
 import AvailabilityBar from '@/components/catalogo/AvailabilityBar'
-import Card from '@/components/catalogo/Card'
+import ApartmentSearchCard from '@/components/catalogo/ApartmentSearchCard'
 import Section from '@/components/shared/Section'
 import { Search, Check, SlidersHorizontal } from 'lucide-react'
-import type { Apartment } from '@/data/apartments'
+import type { PublicApartamentoSummary } from '@/lib/api'
 
 // ── Constantes ──────────────────────────────────────────────────────────────────
 const HERO_BULLETS = ['Apartamentos frente al mar Caribe', 'Check-in autónomo 24/7', 'Atención personalizada']
@@ -182,7 +180,7 @@ function HeroPanel({ onSearch }: { onSearch: (range: string, guests: number) => 
 }
 
 // ── ResultsPanel ─────────────────────────────────────────────────────────────────
-function ResultsPanel({ flow, params, apartments, onModify }: { flow: FlowState; params: SearchParams; apartments: Apartment[]; onModify: () => void }) {
+function ResultsPanel({ flow, params, apartments, onModify }: { flow: FlowState; params: SearchParams; apartments: PublicApartamentoSummary[]; onModify: () => void }) {
   return (
     <div className='w-full h-full overflow-y-auto'>
       {flow === 'searching' && (
@@ -198,7 +196,7 @@ function ResultsPanel({ flow, params, apartments, onModify }: { flow: FlowState;
             <Section id='alojamientos' titulo='Alojamientos disponibles' acento='pink' etiqueta='Resultados'>
               <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8'>
                 {apartments.map((apt) => (
-                  <Card key={apt.slug} apartment={apt} />
+                  <ApartmentSearchCard key={apt.id} apartment={apt} />
                 ))}
               </div>
               {apartments.length === 0 && (
@@ -215,7 +213,7 @@ function ResultsPanel({ flow, params, apartments, onModify }: { flow: FlowState;
 }
 
 // ── SearchFlow (componente raíz) ─────────────────────────────────────────────────
-export default function SearchFlow({ apartments }: { apartments: Apartment[] }) {
+export default function SearchFlow({ apartments }: { apartments: PublicApartamentoSummary[] }) {
   const [flow, setFlow] = useState<FlowState>('idle')
   const [params, setParams] = useState<SearchParams>({ range: '', guests: 0 })
   const desktopRef = useRef<HTMLDivElement>(null)
@@ -256,7 +254,7 @@ export default function SearchFlow({ apartments }: { apartments: Apartment[] }) 
               <Section id='alojamientos' titulo='Alojamientos disponibles' acento='pink' etiqueta='Resultados'>
                 <div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
                   {apartments.map((apt) => (
-                    <Card key={apt.slug} apartment={apt} />
+                    <ApartmentSearchCard key={apt.id} apartment={apt} />
                   ))}
                 </div>
               </Section>
