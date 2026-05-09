@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useCallback, useState, useEffect } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import { motion } from 'framer-motion'
@@ -249,9 +249,21 @@ interface ApartmentDetailClientProps {
 }
 
 export default function ApartmentDetailClient({ apartment }: ApartmentDetailClientProps) {
+  const router  = useRouter()
   const rating   = apartment.anfitrionPrincipal.calificacion ?? 5.0
   const resenas  = apartment.anfitrionPrincipal.resenas ?? 0
   const precio   = apartment.precioNoche
+
+  // Volver al estado previo (resultados con fechas/huéspedes preservados) usando
+  // el historial del browser. Si el usuario aterrizó directo en /catalogo/[slug]
+  // (p. ej. share link), `router.back()` puede no aplicar — fallback a /catalogo.
+  const handleVolver = useCallback(() => {
+    if (typeof window !== 'undefined' && window.history.length > 1) {
+      router.back()
+    } else {
+      router.push('/catalogo#alojamientos')
+    }
+  }, [router])
 
   const precioFormateado = precio != null
     ? new Intl.NumberFormat('es-CO', {
@@ -274,13 +286,14 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
         animate="show"
         className="flex items-center justify-between mb-6"
       >
-        <Link
-          href="/catalogo#alojamientos"
+        <button
+          onClick={handleVolver}
+          aria-label='Volver a los resultados'
           className="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-livic-pink transition-colors"
         >
           <ChevronLeft size={18} />
           Volver
-        </Link>
+        </button>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/logo-livic.png" alt="LIVIC" className="h-8 w-auto" />
       </motion.div>
@@ -518,23 +531,26 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
                 </div>
               </div>
 
-              {/* AvailabilityBar */}
-              <AvailabilityBar />
-
-              {/* Botón de reserva */}
-              <button className="w-full mt-2 bg-livic-black text-white font-bold py-4 rounded-[2rem] hover:bg-livic-pink transition-colors text-sm">
-                Consultar disponibilidad
-              </button>
+              {/* Fechas / huéspedes: Cotizador incluye AvailabilityBar; sin API, barra suelta + CTA */}
+              {!apartment.apiSlug && (
+                <>
+                  <AvailabilityBar />
+                  <button className="w-full mt-2 bg-livic-black text-white font-bold py-4 rounded-[2rem] hover:bg-livic-pink transition-colors text-sm">
+                    Consultar disponibilidad
+                  </button>
+                </>
+              )}
 
               {/* Cotiza tu estadía — solo si el apartamento está sincronizado con la API LIVIC */}
               {apartment.apiSlug && (
-                <div className="mt-6">
+                <>
                   <Cotizador
                     apiSlug={apartment.apiSlug}
                     huespedesMaximos={apartment.huespedes}
                     nochesMinimas={2}
                   />
-                </div>
+                 
+                </>
               )}
 
               {/* Badges del apartamento */}

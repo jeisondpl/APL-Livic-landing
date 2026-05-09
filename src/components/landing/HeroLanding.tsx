@@ -6,13 +6,12 @@
  * Adaptado para propósito institucional
  */
 
-import { useState } from 'react'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { MessageCircle, ArrowDown, Check, Search } from 'lucide-react'
 import { LANDING_CONTENT } from '@/data/landing-content'
 import { getWhatsAppLink } from '@/lib/utils'
 import { CONFIG } from '@/data/config'
-import ProximamenteModal from '@/components/ui/ProximamenteModal'
 
 // ── Variantes de animación (copiadas de catalogos) ──
 const containerVariants = {
@@ -36,7 +35,6 @@ const itemVariants = {
 const HERO_BULLETS = ['Presencia real y control operativo', 'Atención humana y cercana', 'Transparencia total en la gestión']
 
 export default function HeroLanding() {
-  const [modalOpen, setModalOpen] = useState(false)
   const whatsappUrl = getWhatsAppLink(CONFIG.contact.whatsapp.number, CONFIG.contact.whatsapp.message)
 
   const handleScrollToServicios = () => {
@@ -142,14 +140,14 @@ export default function HeroLanding() {
                 <span>Contactar por WhatsApp</span>
               </a>
 
-              {/* CTA 3: Cotiza tu alojamiento */}
-              <button
-                onClick={() => setModalOpen(true)}
+              {/* CTA 3: Cotiza tu alojamiento → /catalogo */}
+              <Link
+                href='/catalogo'
                 className='w-full bg-white border-2 border-livic-pink text-livic-pink hover:bg-livic-pink/10 font-semibold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-xl'
               >
                 <Search className='w-5 h-5' />
                 <span>Cotiza tu alojamiento</span>
-              </button>
+              </Link>
             </div>
 
             {/* Nota de confianza */}
@@ -187,8 +185,6 @@ export default function HeroLanding() {
           </motion.div>
         </motion.div>
       </div>
-
-      <ProximamenteModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </section>
   )
 }

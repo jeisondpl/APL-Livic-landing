@@ -42,25 +42,126 @@ export interface QuoteResult {
   errores?: string[];
 }
 
+export interface PublicEdificioDetalle {
+  id: string;
+  nombre: string;
+  ciudad: string;
+  departamento: string;
+  pais: string;
+  direccion: string;
+  lat: string | null;
+  lng: string | null;
+}
+
+export interface PublicFoto {
+  id: string;
+  src: string;
+  alt: string;
+  orden: number;
+}
+
+export interface PublicEdificioItem {
+  id: string;
+  nombre: string;
+  icono: string;
+}
+
+export interface PublicServicio {
+  id: string;
+  etiqueta: string;
+  disponible: boolean;
+  nota: string | null;
+}
+
+export interface PublicAmenidadCategoria {
+  categoria: { id: string; titulo: string; icono: string; orden: number };
+  items: Array<{ id: string; nombre: string; icono: string; nota: string | null }>;
+}
+
+export interface PublicAnuncio {
+  hook: string | null;
+  descripcionPropiedad: string | null;
+  descripcionAcceso: string | null;
+  descripcionInteraccion: string | null;
+  descripcionOtrosDetalles: string | null;
+}
+
+export interface PublicDistancia {
+  destino: string;
+  tiempoMinutos: number | null;
+  transporte: string | null;
+  orden: number;
+}
+
+export interface PublicPricing {
+  moneda: string;
+  precioNetoEntreSemana: string | null;
+  precioNetoFinSemana: string | null;
+  precioPublicadoEntreSemana: string | null;
+  precioPublicadoFinSemana: string | null;
+  descuentoSemanalPct: string | null;
+  descuentoMensualPct: string | null;
+  comisionAirbnbPct: string | null;
+  vigenteDesde: string;
+  vigenteHasta: string | null;
+}
+
+export interface PublicApartamentoDetalle {
+  id: string;
+  slug: string;
+  nombre: string;
+  numero: string;
+  piso: number | null;
+  torre: number | null;
+  tipo: string | null;
+  tipoPropiedad: string | null;
+  huespedes: number | null;
+  habitaciones: number | null;
+  camas: number | null;
+  sofacama: number | null;
+  banos: number | null;
+  descripcionCorta: string | null;
+  descripcionLarga: string | null;
+  frasePosituelo: string | null;
+  checkIn: string | null;
+  checkOut: string | null;
+  /** JSONB: { nombre, empresa?, calificacion?, resenas?, anosExperiencia? } */
+  anfitrionPrincipal: unknown;
+  /** JSONB: { nombre, ... } */
+  coanfitrion: unknown;
+  /** JSONB: string[] */
+  badges: unknown;
+  /** JSONB: string[] */
+  noIncluidos: unknown;
+  /** JSONB: string[] */
+  notas: unknown;
+  /** JSONB: { src, alt } */
+  heroPhoto: unknown;
+  airbnbIcsUrl: string | null;
+  estado: string | null;
+  referenciaInterna: string | null;
+  tituloAnuncio: string | null;
+  estiloDecorativo: string | null;
+  vistas: unknown;
+  fortalezas: unknown;
+  debilidades: unknown;
+  huespedIdeal: unknown;
+  nochesMinimas: number | null;
+  nochesMaximas: number | null;
+  huespedesRecomendados: number | null;
+}
+
 export interface PublicFicha {
-  apartamento: {
-    id: string;
-    slug: string;
-    nombre: string;
-    numero: string;
-    referenciaInterna: string | null;
-    tituloAnuncio: string | null;
-    tipoPropiedad: string | null;
-    huespedesRecomendados: number | null;
-    nochesMinimas: number | null;
-  };
-  pricingVigente: {
-    moneda: string;
-    precioNetoEntreSemana: string | null;
-    precioNetoFinSemana: string | null;
-    descuentoSemanalPct: string | null;
-    descuentoMensualPct: string | null;
-  } | null;
+  apartamento: PublicApartamentoDetalle;
+  edificio: PublicEdificioDetalle;
+  anuncio: PublicAnuncio | null;
+  distancias: PublicDistancia[];
+  pricingVigente: PublicPricing | null;
+  fotos: PublicFoto[];
+  servicios: PublicServicio[];
+  amenidades: PublicAmenidadCategoria[];
+  edificioAmenidades: PublicEdificioItem[];
+  edificioReglas: PublicEdificioItem[];
 }
 
 /* ════════════════════ Listado del catálogo ════════════════════ */
@@ -109,6 +210,30 @@ export interface PublicApartamentoSummary {
 
 export async function fetchAllApartments(): Promise<PublicApartamentoSummary[]> {
   return apiGet<PublicApartamentoSummary[]>('/api/public/apartamentos');
+}
+
+export interface AvailabilityQuery {
+  /** YYYY-MM-DD */
+  checkIn: string;
+  /** YYYY-MM-DD (exclusivo) */
+  checkOut: string;
+  /** Capacidad mínima requerida; omitir para no filtrar por huéspedes. */
+  huespedes?: number;
+}
+
+/**
+ * GET /api/public/apartamentos/disponibles
+ * Devuelve apartamentos activos cuyo calendario no solapa con el rango pedido
+ * y cuya capacidad cumple `huespedes`. Mismo shape que el listado general.
+ */
+export async function fetchAvailableApartments(
+  query: AvailabilityQuery,
+): Promise<PublicApartamentoSummary[]> {
+  return apiGet<PublicApartamentoSummary[]>('/api/public/apartamentos/disponibles', {
+    checkIn: query.checkIn,
+    checkOut: query.checkOut,
+    huespedes: query.huespedes,
+  });
 }
 
 /* ════════════════════ Helpers ════════════════════ */

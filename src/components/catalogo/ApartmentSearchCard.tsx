@@ -19,12 +19,9 @@ import { Heart, Star } from 'lucide-react';
 import { useState } from 'react';
 import type { PublicApartamentoSummary } from '@/lib/api';
 import { resolveHeroPhoto } from '@/lib/hero-fallback';
-import { getDetailSlug } from '@/lib/slug-mapping';
 
 interface Props {
   apartment: PublicApartamentoSummary;
-  /** Slug usado en la ruta /catalogo/[slug]. Por defecto usa el slug del API. */
-  detailSlug?: string;
   /** Cantidad de noches a mostrar en la card (default 2). */
   noches?: number;
 }
@@ -83,7 +80,6 @@ function computePriceForNights(
 
 export default function ApartmentSearchCard({
   apartment,
-  detailSlug,
   noches = 2,
 }: Props) {
   const [favorited, setFavorited] = useState(false);
@@ -91,37 +87,23 @@ export default function ApartmentSearchCard({
   const hero = resolveHeroPhoto(apartment.heroPhoto, apartment.numero);
   const price = computePriceForNights(apartment.pricingVigente, noches);
 
-  // Título: prioriza el título Airbnb si existe, sino arma uno con tipo + numero
-  const title =
-    apartment.tituloAnuncio?.trim() ||
-    `${apartment.tipoPropiedad ?? apartment.tipo} ${apartment.numero} · ${apartment.edificio.nombre}`;
+  // Título solicitado: nombre del apartamento + edificio
+  const title = `${apartment.nombre} · ${apartment.edificio.nombre}`;
 
-  // Subtítulo: edificio + ciudad
-  const subtitle = `${apartment.edificio.nombre} · ${apartment.edificio.ciudad}`;
+  // Subtítulo: ciudad, departamento
+  const subtitle = `${apartment.edificio.ciudad}, ${apartment.edificio.departamento}`;
 
   // Rating placeholder hasta que tengamos reseñas reales
   const rating = apartment.calificacion ?? 4.85;
   const resenas = apartment.resenas ?? 0;
 
-  // Resuelve el slug de detalle: prioriza prop > mapping por numero > null
-  const resolvedDetailSlug = detailSlug ?? getDetailSlug(apartment.numero);
-  const href = resolvedDetailSlug ? `/catalogo/${resolvedDetailSlug}` : null;
-
-  // Cuando no hay detalle disponible, renderizamos un div sin link
-  const Wrapper = href
-    ? ({ children, className }: { children: React.ReactNode; className: string }) => (
-        <Link href={href} className={className}>
-          {children}
-        </Link>
-      )
-    : ({ children, className }: { children: React.ReactNode; className: string }) => (
-        <div className={className} aria-label="Detalle próximamente disponible">
-          {children}
-        </div>
-      );
+  const href = `/catalogo/${apartment.slug}`;
 
   return (
-    <Wrapper className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-livic-pink/40 rounded-3xl">
+    <Link
+      href={href}
+      className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-livic-pink/40 rounded-3xl"
+    >
       {/* ── Foto ──────────────────────────────────────────── */}
       <div className="relative aspect-square w-full overflow-hidden rounded-3xl bg-gray-100">
         <Image
@@ -197,14 +179,7 @@ export default function ApartmentSearchCard({
             <span className="text-gray-500">Disponibilidad bajo consulta</span>
           )}
         </p>
-
-        {/* Hint cuando aún no hay detalle estático */}
-        {!href && (
-          <p className="mt-1 text-[11px] text-gray-400 italic">
-            Detalle próximamente
-          </p>
-        )}
       </div>
-    </Wrapper>
+    </Link>
   );
 }

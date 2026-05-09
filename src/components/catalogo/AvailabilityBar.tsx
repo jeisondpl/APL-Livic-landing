@@ -1,12 +1,14 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback, type MutableRefObject } from 'react'
 import { createPortal } from 'react-dom'
 import { Search, X, Users, CalendarDays, Check } from 'lucide-react'
 
 /* ── Tipos ── */
 type GuestKey = 'adultos' | 'ninos' | 'bebes' | 'mascotas'
-interface Guests { adultos: number; ninos: number; bebes: number; mascotas: number }
+export interface Guests { adultos: number; ninos: number; bebes: number; mascotas: number }
+
+const EMPTY_GUESTS: Guests = { adultos: 0, ninos: 0, bebes: 0, mascotas: 0 }
 
 /* ── Helpers ── */
 function formatRange(value: string): string {
@@ -271,11 +273,13 @@ function GuestsModal({
   onClose,
   guests,
   onAdjust,
+  maxTotalGuests,
 }: {
   open: boolean
   onClose: () => void
   guests: Guests
   onAdjust: (key: GuestKey, delta: number) => void
+  maxTotalGuests?: number
 }) {
   const total = Object.values(guests).reduce((a, b) => a + b, 0)
 
@@ -327,7 +331,8 @@ function GuestsModal({
                 </span>
                 <button
                   onClick={() => onAdjust(row.key, 1)}
-                  className='w-9 h-9 rounded-full border border-gray-300 flex items-center justify-center text-gray-700 text-xl leading-none hover:border-livic-pink hover:text-livic-pink transition-colors'
+                  disabled={maxTotalGuests != null && total >= maxTotalGuests}
+                  className='w-9 h-9 rounded-full border border-gray-300 flex items-center justify-center text-gray-700 text-xl leading-none hover:border-livic-pink hover:text-livic-pink transition-colors disabled:opacity-25 disabled:pointer-events-none'
                 >+</button>
               </div>
             </div>
@@ -350,19 +355,61 @@ function GuestsModal({
 }
 
 /* ── Componente principal ────────────────────────────────────────────────────── */
-interface AvailabilityBarProps {
-  onSearch?: (range: string, guests: number) => void
+export interface AvailabilityBarProps {
+  /** Se invoca al buscar. Emite `range`, total y breakdown por categoría
+   *  (necesario para preservar la selección al volver al formulario con
+   *  "Modificar"). */
+  onSearch?: (range: string, totalGuests: number, breakdown: Guests) => void
+  /** Rango inicial `YYYY-MM-DD/YYYY-MM-DD` (formato Cally). */
+  defaultRange?: string
+  /** Se fusiona con ceros en cada categoría. */
+  defaultGuests?: Partial<Guests>
+  /** Oculta el botón "Buscar disponibilidad" (p. ej. embebido en Cotizador). */
+  hideSearchButton?: boolean
+  /** Capacidad máxima de personas (adultos+niños+bebés+mascotas). */
+  maxTotalGuests?: number
+  /** Al cambiar fechas o huéspedes (incl. montaje con valores por defecto). */
+  onSelectionChange?: (range: string, totalGuests: number) => void
 }
 
-export default function AvailabilityBar({ onSearch }: AvailabilityBarProps = {}) {
-  const [range,  setRange]  = useState('')
-  const [guests, setGuests] = useState<Guests>({ adultos: 0, ninos: 0, bebes: 0, mascotas: 0 })
-  const [modal,  setModal]  = useState<'fechas' | 'quien' | null>(null)
+export default function AvailabilityBar({
+  onSearch,
+  defaultRange = '',
+  defaultGuests,
+  hideSearchButton = false,
+  maxTotalGuests,
+  onSelectionChange,
+}: AvailabilityBarProps = {}) {
+  const [range, setRange] = useState(defaultRange)
+  const [guests, setGuests] = useState<Guests>({ ...EMPTY_GUESTS, ...defaultGuests })
+  const [modal, setModal] = useState<'fechas' | 'quien' | null>(null)
+  const [dateError, setDateError] = useState(false)
 
   const total = Object.values(guests).reduce((a, b) => a + b, 0)
+  const hasValidRange = range.includes('/') && range.split('/').every(Boolean)
+
+  // Limpia el error en cuanto el usuario completa el rango.
+  useEffect(() => {
+    if (hasValidRange && dateError) setDateError(false)
+  }, [hasValidRange, dateError])
+
+  const onSelRef: MutableRefObject<AvailabilityBarProps['onSelectionChange']> = useRef(onSelectionChange)
+  onSelRef.current = onSelectionChange
+
+  useEffect(() => {
+    onSelRef.current?.(range, total)
+  }, [range, total])
 
   function adjust(key: GuestKey, delta: number) {
-    setGuests(prev => ({ ...prev, [key]: Math.max(0, prev[key] + delta) }))
+    setGuests((prev) => {
+      const nextVal = Math.max(0, prev[key] + delta)
+      if (delta > 0 && maxTotalGuests != null) {
+        const sumOthers = Object.entries(prev).reduce((acc, [k, v]) => (k === key ? acc : acc + v), 0)
+        const capped = Math.min(nextVal, Math.max(0, maxTotalGuests - sumOthers))
+        return { ...prev, [key]: capped }
+      }
+      return { ...prev, [key]: nextVal }
+    })
   }
 
   return (
@@ -372,19 +419,28 @@ export default function AvailabilityBar({ onSearch }: AvailabilityBarProps = {})
 
         {/* Fechas */}
         <button
-          onClick={() => setModal('fechas')}
+          onClick={() => { setDateError(false); setModal('fechas') }}
           className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors text-left ${
-            range ? 'border-livic-pink bg-livic-pink/5' : 'border-gray-200 bg-gray-50 hover:border-gray-300'
+            dateError
+              ? 'border-red-400 bg-red-50 animate-pulse'
+              : range
+                ? 'border-livic-pink bg-livic-pink/5'
+                : 'border-gray-200 bg-gray-50 hover:border-gray-300'
           }`}
         >
-          <CalendarDays className={`w-4 h-4 flex-shrink-0 ${range ? 'text-livic-pink' : 'text-gray-400'}`} />
+          <CalendarDays className={`w-4 h-4 flex-shrink-0 ${dateError ? 'text-red-500' : range ? 'text-livic-pink' : 'text-gray-400'}`} />
           <div>
             <p className='text-xs font-semibold text-gray-700 tracking-wide leading-none mb-0.5'>Fechas</p>
-            <p className={`text-sm leading-none ${range ? 'text-livic-pink font-medium' : 'text-gray-400'}`}>
+            <p className={`text-sm leading-none ${dateError ? 'text-red-500 font-medium' : range ? 'text-livic-pink font-medium' : 'text-gray-400'}`}>
               {range ? formatRange(range) : 'Agrega fechas de entrada y salida'}
             </p>
           </div>
         </button>
+        {dateError && (
+          <p className='text-xs text-red-500 -mt-1 ml-1'>
+            Selecciona un rango de fechas para ver los resultados.
+          </p>
+        )}
 
         {/* Huéspedes */}
         <button
@@ -404,14 +460,29 @@ export default function AvailabilityBar({ onSearch }: AvailabilityBarProps = {})
       </div>
 
       {/* Buscar */}
-      <button
-        onClick={() => { setModal(null); onSearch?.(range, total) }}
-        aria-label='Buscar disponibilidad'
-        className='w-full bg-livic-pink hover:bg-livic-pink/90 active:scale-[0.98] text-white rounded-xl py-3.5 font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-md'
-      >
-        <Search size={16} strokeWidth={2.5} />
-        Buscar disponibilidad
-      </button>
+      {!hideSearchButton && (
+        <button
+          onClick={() => {
+            if (!hasValidRange) {
+              setDateError(true)
+              setModal('fechas')
+              return
+            }
+            setModal(null)
+            onSearch?.(range, total, guests)
+          }}
+          aria-label='Buscar disponibilidad'
+          aria-disabled={!hasValidRange}
+          className={`w-full text-white rounded-xl py-3.5 font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-md ${
+            hasValidRange
+              ? 'bg-livic-pink hover:bg-livic-pink/90 active:scale-[0.98]'
+              : 'bg-livic-pink/50 cursor-not-allowed'
+          }`}
+        >
+          <Search size={16} strokeWidth={2.5} />
+          Buscar disponibilidad
+        </button>
+      )}
 
       {/* ── Modales ── */}
       <CalendarModal
@@ -426,6 +497,7 @@ export default function AvailabilityBar({ onSearch }: AvailabilityBarProps = {})
         onClose={() => setModal(null)}
         guests={guests}
         onAdjust={adjust}
+        maxTotalGuests={maxTotalGuests}
       />
     </>
   )
