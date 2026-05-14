@@ -53,7 +53,7 @@ export default function HeroLanding() {
         {/* Fondo con imagen y overlay direccional */}
         <div className='absolute inset-0'>
           <img src={LANDING_CONTENT.hero.backgroundImage} alt='LIVIC Santa Marta' className='absolute inset-0 w-full h-full object-cover' />
-          <div className='absolute inset-0 bg-gradient-to-r from-black/65 via-black/40 to-black/15' />
+          <div className='absolute inset-0 bg-gradient-to-r from-black/30 via-black/10 to-black/5' />
         </div>
 
         {/* Contenido en grid de 2 columnas */}

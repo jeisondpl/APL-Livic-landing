@@ -9,7 +9,7 @@ export const LANDING_CONTENT = {
     subtitle: "Operamos y acompañamos inmuebles en renta turística con presencia real, control operativo y atención constante.",
     ctaPrimary: "Conoce nuestros servicios",
     ctaSecondary: "Contactar por WhatsApp",
-    backgroundImage: "/portada-landing.jpg"
+    backgroundImage: "/foto-fondo-2.jpeg" 
   },
 
   mision: "En LIVIC operamos y acompañamos inmuebles en renta turística de manera integral, brindando a propietarios y huéspedes una experiencia organizada, cercana y confiable. Gestionamos cada propiedad con presencia real, control operativo y atención constante, asegurando el buen estado del inmueble, la satisfacción del huésped y la tranquilidad del propietario.",
@@ -22,7 +22,7 @@ export const LANDING_CONTENT = {
       titulo: "Operación de Renta Turística",
       icono: "Home",
       descripcionCorta: "Nos encargamos de toda la gestión de tu propiedad en renta turística",
-      imagen: "/servicio-operacion.jpg", 
+      imagen: "/farol-atardecer.png",  
       caracteristicas: [
         "Gestión de reservas en plataformas y reservas directas",
         "Atención integral a huéspedes antes, durante y después de la estadía",
