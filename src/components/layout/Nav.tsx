@@ -12,9 +12,23 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { MessageCircle, Menu, X } from "lucide-react";
+import { MessageCircle, Menu, X, Mail, Instagram, MapPin } from "lucide-react";
 import { getWhatsAppLink } from "@/lib/utils";
 import { CONFIG } from "@/data/config";
+
+/** Icono inline de TikTok (Lucide no lo trae). */
+function TikTokIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden
+    >
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.1Z" />
+    </svg>
+  );
+}
 
 /** IDs de las secciones del homepage que deben tracker scroll spy. */
 const HOMEPAGE_SECTION_IDS = ["servicios", "valor", "beneficios"] as const;
@@ -397,12 +411,99 @@ export default function Nav() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMenuOpen(false)}
-              className="inline-flex items-center justify-center gap-2 w-full bg-livic-green hover:bg-livic-green/90 text-white px-4 py-3 rounded-xl text-sm font-bold transition-colors"
+              className="inline-flex items-center justify-center gap-2 w-full bg-livic-green hover:bg-livic-green/90 text-white px-4 py-3 rounded-xl text-sm font-bold transition-colors shadow-md shadow-livic-green/20"
             >
               <MessageCircle className="w-4 h-4" />
               Hablar por WhatsApp
             </a>
           </div>
+
+          {/* ════════════════════════════════════════════
+              PANEL DE BRAND + CONTACTO + REDES
+          ════════════════════════════════════════════ */}
+          <div className="relative mt-6 mx-2 rounded-2xl bg-gradient-to-br from-livic-pink/8 via-white to-livic-purple/8 border border-livic-pink/15 overflow-hidden">
+            {/* Blob decorativo */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -top-12 -right-12 w-32 h-32 rounded-full bg-livic-yellow/20 blur-2xl"
+            />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -bottom-12 -left-12 w-32 h-32 rounded-full bg-livic-purple/15 blur-2xl"
+            />
+
+            <div className="relative p-5 space-y-5">
+              {/* Tagline / lema */}
+              <div>
+                <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-livic-purple mb-1.5">
+                  La marca
+                </p>
+                <p className="text-sm font-semibold text-livic-black leading-snug">
+                  Hospitalidad con atención real ✨
+                </p>
+                <p className="mt-1.5 text-xs text-text-muted leading-relaxed">
+                  {CONFIG.site.description}
+                </p>
+              </div>
+
+              {/* Separador */}
+              <div aria-hidden className="h-px bg-gradient-to-r from-transparent via-livic-pink/30 to-transparent" />
+
+              {/* Redes sociales */}
+              <div>
+                <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-livic-purple mb-2.5">
+                  Síguenos
+                </p>
+                <div className="flex items-center gap-2.5">
+                  <a
+                    href={CONFIG.social.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Instagram de LIVIC"
+                    onClick={() => setMenuOpen(false)}
+                    className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-gray-100 text-livic-pink hover:bg-livic-pink hover:text-white transition-colors shadow-sm"
+                  >
+                    <Instagram className="w-4 h-4" />
+                  </a>
+                  <a
+                    href={CONFIG.social["tik-tok"]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="TikTok de LIVIC"
+                    onClick={() => setMenuOpen(false)}
+                    className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-gray-100 text-livic-black hover:bg-livic-black hover:text-white transition-colors shadow-sm"
+                  >
+                    <TikTokIcon className="w-4 h-4" />
+                  </a>
+                  <a
+                    href={`mailto:${CONFIG.contact.email}`}
+                    aria-label="Enviar email a LIVIC"
+                    onClick={() => setMenuOpen(false)}
+                    className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-gray-100 text-livic-purple hover:bg-livic-purple hover:text-white transition-colors shadow-sm"
+                  >
+                    <Mail className="w-4 h-4" />
+                  </a>
+                </div>
+                <p className="mt-2.5 text-[11px] text-text-muted break-all">
+                  {CONFIG.contact.email}
+                </p>
+              </div>
+
+              {/* Separador */}
+              <div aria-hidden className="h-px bg-gradient-to-r from-transparent via-livic-pink/30 to-transparent" />
+
+              {/* Ubicación */}
+              <div className="flex items-center gap-2 text-xs text-text-muted">
+                <MapPin className="w-3.5 h-3.5 text-livic-green flex-shrink-0" />
+                <span>Santa Marta · Colombia</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Copyright al fondo */}
+          <p className="mt-4 mb-2 text-center text-[10px] text-text-muted tracking-wider">
+            © {new Date().getFullYear()} LIVIC · Todos los derechos reservados
+          </p>
         </nav>
       </aside>
     </>
