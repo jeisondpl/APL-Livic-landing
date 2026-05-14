@@ -70,7 +70,7 @@ export default function Section({
           />
 
           {subtitulo && (
-            <p className="text-text-muted text-base md:text-lg mt-4 max-w-2xl leading-relaxed">
+            <p className={`text-text-muted text-base md:text-lg mt-4 max-w-2xl leading-relaxed ${centrado ? "mx-auto" : ""}`}>
               {subtitulo}
             </p>
           )}

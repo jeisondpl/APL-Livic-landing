@@ -62,10 +62,10 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="#valor"
+                  href="/#valor"
                   className="text-sm text-gray-300 hover:text-livic-pink transition-colors"
                 >
-                  Valor Diferencial
+                  Por qué LIVIC
                 </Link>
               </li>
               <li>

@@ -7,11 +7,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { MessageCircle } from "lucide-react";
 import { getWhatsAppLink } from "@/lib/utils";
 import { CONFIG } from "@/data/config";
 
 export default function Nav() {
+  const pathname = usePathname();
   const whatsappUrl = getWhatsAppLink(
     CONFIG.contact.whatsapp.number,
     CONFIG.contact.whatsapp.message
@@ -25,12 +27,30 @@ export default function Nav() {
     }
   };
 
+  /**
+   * Inicio: si ya estamos en "/", scroll suave al top (mismo comportamiento
+   * que clickear anchors); si estamos en otra ruta (/pricing, /detras-de-livic,
+   * /catalogo), Next navega a "/" normalmente.
+   */
+  const handleInicioClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  // Solo en homepage tiene sentido mostrar los anchors de scroll a secciones.
+  // En /detras-de-livic, /pricing, /catalogo, etc., los anchors apuntarían a
+  // ids que no existen en esa ruta y darían navegación rota.
+  const isHomepage = pathname === "/";
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 md:px-10 py-3 bg-white/95 backdrop-blur-sm border-b border-gray-100">
 
       {/* Logo */}
       <Link
         href="/"
+        onClick={handleInicioClick}
         className="flex items-center hover:opacity-75 transition-opacity"
       >
         <Image
@@ -47,32 +67,52 @@ export default function Nav() {
       <div className="hidden md:flex items-center gap-8">
         <Link
           href="/"
+          onClick={handleInicioClick}
           className="text-sm text-gray-600 font-medium hover:text-livic-pink transition-colors duration-200"
         >
           Inicio
         </Link>
-        <a
-          href="#servicios"
-          onClick={(e) => handleScrollTo(e, '#servicios')}
+
+        {/* Anchors al homepage — solo visibles cuando estamos en "/" */}
+        {isHomepage && (
+          <>
+            <a
+              href="#servicios"
+              onClick={(e) => handleScrollTo(e, '#servicios')}
+              className="text-sm text-gray-600 font-medium hover:text-livic-pink transition-colors duration-200"
+            >
+              Servicios
+            </a>
+            <a
+              href="#valor"
+              onClick={(e) => handleScrollTo(e, '#valor')}
+              className="text-sm text-gray-600 font-medium hover:text-livic-pink transition-colors duration-200"
+            >
+              Por qué LIVIC
+            </a>
+            <a
+              href="#beneficios"
+              onClick={(e) => handleScrollTo(e, '#beneficios')}
+              className="text-sm text-gray-600 font-medium hover:text-livic-pink transition-colors duration-200"
+            >
+              Beneficios
+            </a>
+          </>
+        )}
+
+        {/* Rutas independientes — siempre visibles */}
+        <Link
+          href="/detras-de-livic"
           className="text-sm text-gray-600 font-medium hover:text-livic-pink transition-colors duration-200"
         >
-          Servicios
-        </a>
-        <a
-          href="#valor"
-          onClick={(e) => handleScrollTo(e, '#valor')}
+          Detrás de Livic
+        </Link>
+        <Link
+          href="/pricing"
           className="text-sm text-gray-600 font-medium hover:text-livic-pink transition-colors duration-200"
         >
-          Valor
-        </a>
-        <a
-          href="#beneficios"
-          onClick={(e) => handleScrollTo(e, '#beneficios')}
-          className="text-sm text-gray-600 font-medium hover:text-livic-pink transition-colors duration-200"
-        >
-          Beneficios
-        </a>
-        
+          Pricing &amp; Plan
+        </Link>
       </div>
 
       {/* WhatsApp link */}

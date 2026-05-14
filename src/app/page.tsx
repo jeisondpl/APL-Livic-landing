@@ -24,7 +24,7 @@ export default function HomePage() {
         {/* Servicios */}
         <ServiciosSection />
 
-        {/* Valor Diferencial */}
+        {/* Por qué LIVIC */}
         <ValorDiferencialSection />
 
         {/* Beneficios */}
@@ -36,7 +36,7 @@ export default function HomePage() {
         {/* CTA Final */}
         <CTASection />
       </main>
-
+      
       <Footer />
     </>
   );
