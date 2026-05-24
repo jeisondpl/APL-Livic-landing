@@ -349,7 +349,7 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
               <div className="flex items-center gap-2 mb-4 text-sm">
                 <Eye size={16} className="text-livic-purple flex-shrink-0" />
                 <span className="text-gray-600">
-                  <span className="font-semibold text-livic-purple">Vistas:</span>{' '}
+                  <span className="font-semibold text-livic-purple">Vistas</span>{' · '}
                   {apartment.vistas.slice(0, 3).join(' · ')}
                   {apartment.vistas.length > 3 && (
                     <span className="text-gray-400"> · +{apartment.vistas.length - 3} más</span>
@@ -390,12 +390,12 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
             )}
           </SectionCard>
 
-          {/* Por qué te va a encantar (fortalezas) + Ideal para (huespedIdeal) */}
+          {/* Fortalezas + Huésped ideal — títulos espejo del PMS */}
           {((apartment.fortalezas?.length ?? 0) > 0 || (apartment.huespedIdeal?.length ?? 0) > 0) && (
             <SectionCard>
               {apartment.fortalezas && apartment.fortalezas.length > 0 && (
                 <MarketingList
-                  title="Por qué te va a encantar"
+                  title="Fortalezas"
                   titleIcon={<Sparkles size={16} />}
                   items={apartment.fortalezas}
                   tone="green"
@@ -406,7 +406,7 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
               {apartment.huespedIdeal && apartment.huespedIdeal.length > 0 && (
                 <div className={apartment.fortalezas && apartment.fortalezas.length > 0 ? 'mt-5' : ''}>
                   <MarketingList
-                    title="Ideal para"
+                    title="Huésped ideal"
                     titleIcon={<Target size={16} />}
                     items={apartment.huespedIdeal}
                     tone="purple"
@@ -443,7 +443,7 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
             {apartment.noIncluidos.length > 0 && (
               <div className="mt-5 pt-5 border-t border-gray-100">
                 <MarketingList
-                  title="Lo que necesitarás traer"
+                  title="No incluidos"
                   items={apartment.noIncluidos}
                   tone="gray"
                   layout="list"
@@ -477,7 +477,7 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
               return (
                 <div className="bg-livic-yellow/10 border border-livic-yellow/30 rounded-2xl p-4">
                   <p className="text-xs font-bold text-amber-700 uppercase tracking-wide mb-2">
-                    Información importante
+                    Notas
                   </p>
                   <ul className="space-y-2">
                     {notas.map((nota, i) => (
@@ -493,9 +493,11 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
           </SectionCard>
 
           {/* Cosas a tener en cuenta (debilidades — disclosure honest) */}
+          <section className='my-6'>
+
           {apartment.debilidades && apartment.debilidades.length > 0 && (
             <CollapsibleSection
-              title="Cosas a tener en cuenta"
+              title="Debilidades"
               icon={<Info size={16} />}
               tone="amber"
               defaultOpen={false}
@@ -510,6 +512,7 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
               </ul>
             </CollapsibleSection>
           )}
+          </section>
 
           {/* Anfitrión */}
           <SectionCard>
@@ -645,17 +648,22 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
                 </>
               )}
 
-              {/* Badges del apartamento */}
+              {/* Badges (highlights) — título espejo del label del PMS */}
               {apartment.badges.length > 0 && (
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {apartment.badges.slice(0, 4).map((badge) => (
-                    <span
-                      key={badge}
-                      className="text-xs bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full"
-                    >
-                      {badge}
-                    </span>
-                  ))}
+                <div className="mt-4">
+                  <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">
+                    Badges (highlights)
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {apartment.badges.slice(0, 4).map((badge) => (
+                      <span
+                        key={badge}
+                        className="text-xs bg-livic-pink/10 text-livic-pink font-medium px-3 py-1.5 rounded-full"
+                      >
+                        {badge}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
