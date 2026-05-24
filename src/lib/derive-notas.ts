@@ -70,7 +70,7 @@ function generateDerivedNotas(apt: Apartment): DerivedNota[] {
     // Detalles extra
     const detalles: string[] = []
     detalles.push('a partir de 9 años')
-    if (apt.manillaSoloTarjeta) detalles.push('SOLO TARJETA')
+    if (apt.manillaSoloTarjeta) detalles.push('SOLO TARJETA O TRANSFERENCIA')
     text += ` (${detalles.join(', ')}).`
     out.push({ text, source: 'manilla' })
   }
