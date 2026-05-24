@@ -173,7 +173,10 @@ export function publicFichaToApartment(ficha: PublicFicha): Apartment {
 
   return {
     slug: apt.slug,
-    nombre: apt.nombre,
+    // Prioridad: tituloAnuncio (marketing-friendly, ej "Piso 10 · Reserva del
+    // Mar · 3 Hab para 7 huéspedes") > nombre interno (ej "1037"). El nombre
+    // interno es un código operativo y no debería mostrarse al cliente final.
+    nombre: apt.tituloAnuncio?.trim() || apt.nombre,
     edificio: edificio.nombre,
     apartamento: apt.numero,
     piso: apt.piso ?? 0,
