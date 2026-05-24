@@ -239,6 +239,15 @@ export default function Cotizador({
             </div>
           )}
 
+          {quote.tarifaLimpieza > 0 && (
+            <div className='flex items-baseline justify-between text-sm'>
+              <span className='text-gray-500'>Tarifa de limpieza</span>
+              <span className='text-gray-700 tabular-nums'>
+                {fmtCurrency(quote.tarifaLimpieza, quote.moneda)}
+              </span>
+            </div>
+          )}
+
           <div className='flex items-end justify-between pt-4 border-t border-gray-100'>
             <div>
               <p className='text-[10px] text-gray-400 uppercase tracking-[0.12em]'>Total</p>

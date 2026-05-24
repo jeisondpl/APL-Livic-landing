@@ -32,6 +32,9 @@ export interface QuoteResult {
   descuentoPct: number;
   descuentoTipo: DescuentoTipo;
   descuentoMonto: number;
+  /** Cargo plano de limpieza (1 vez por estadía, no aplica descuento). */
+  tarifaLimpieza: number;
+  /** total = subtotal - descuentoMonto + tarifaLimpieza */
   total: number;
   comisionAirbnbPct: number;
   comisionAirbnbMonto: number;
@@ -102,6 +105,7 @@ export interface PublicPricing {
   descuentoSemanalPct: string | null;
   descuentoMensualPct: string | null;
   comisionAirbnbPct: string | null;
+  tarifaLimpieza: string | null;
   vigenteDesde: string;
   vigenteHasta: string | null;
 }
@@ -217,6 +221,7 @@ export interface PublicApartamentoSummary {
     descuentoSemanalPct: string | null;
     descuentoMensualPct: string | null;
     comisionAirbnbPct: string | null;
+    tarifaLimpieza: string | null;
   } | null;
   calificacion: number | null;
   resenas: number | null;
