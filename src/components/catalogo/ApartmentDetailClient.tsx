@@ -1,7 +1,7 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { useCallback, useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useCallback, useMemo, useState, useEffect } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import { motion } from 'framer-motion'
 import {
@@ -259,9 +259,27 @@ interface ApartmentDetailClientProps {
 
 export default function ApartmentDetailClient({ apartment }: ApartmentDetailClientProps) {
   const router  = useRouter()
+  const searchParams = useSearchParams()
   const rating   = apartment.anfitrionPrincipal.calificacion ?? 5.0
   const resenas  = apartment.anfitrionPrincipal.resenas ?? 0
   const precio   = apartment.precioNoche
+
+  // Filtros heredados del buscador del catálogo (vienen como query params
+  // en el href de la card cuando el usuario filtró antes de entrar). Si
+  // no hay query params, el Cotizador arranca vacío. Validamos el shape
+  // del range para evitar pasar basura al AvailabilityBar.
+  const initialRange = useMemo(() => {
+    const r = searchParams.get('range')
+    if (!r || !r.includes('/')) return undefined
+    const [a, b] = r.split('/')
+    return a && b ? r : undefined
+  }, [searchParams])
+  const initialGuests = useMemo(() => {
+    const g = searchParams.get('guests')
+    if (!g) return undefined
+    const n = parseInt(g, 10)
+    return Number.isInteger(n) && n > 0 ? n : undefined
+  }, [searchParams])
 
   // Estado lifted desde el Cotizador: el header del booking card pasa de
   // "Desde $X / noche" (sin fechas o cotización inválida) a
@@ -684,6 +702,8 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
                   apartamentoNombre={apartment.nombre}
                   huespedesMaximos={apartment.huespedes}
                   nochesMinimas={2}
+                  initialRange={initialRange}
+                  initialGuests={initialGuests}
                   onQuoteChange={setCurrentQuote}
                 />
               )}

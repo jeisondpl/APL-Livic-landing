@@ -2,8 +2,9 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { useSearchParams } from 'next/navigation'
 import useEmblaCarousel from 'embla-carousel-react'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import type { Apartment } from '@/data/apartments'
 import { Users, BedDouble, Bath, Heart, Star, ChevronLeft, ChevronRight } from 'lucide-react'
 
@@ -15,6 +16,18 @@ export default function Card({ apartment }: CardProps) {
   const rating  = apartment.anfitrionPrincipal.calificacion ?? 5.0
   const resenas = apartment.anfitrionPrincipal.resenas ?? 0
   const precio  = apartment.precioNoche
+  // Propaga range/guests del catálogo al detalle si el usuario filtró antes.
+  const searchParams = useSearchParams()
+  const href = useMemo(() => {
+    const path = `/catalogo/${apartment.slug}`
+    const sp = new URLSearchParams()
+    const range = searchParams.get('range')
+    const guests = searchParams.get('guests')
+    if (range) sp.set('range', range)
+    if (guests) sp.set('guests', guests)
+    const qs = sp.toString()
+    return qs ? `${path}?${qs}` : path
+  }, [apartment.slug, searchParams])
 
   const precioFormateado = precio != null
     ? new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(precio)
@@ -37,7 +50,7 @@ export default function Card({ apartment }: CardProps) {
 
   return (
     <Link
-      href={`/catalogo/${apartment.slug}`}
+      href={href}
       className="card-hover group block bg-white rounded-[3.5rem] p-5 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.10)] border border-gray-100"
     >
       {/* ── Slider de fotos ── */}

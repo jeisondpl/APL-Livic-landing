@@ -16,6 +16,17 @@ interface CotizadorProps {
   /** Capacidad máxima de huéspedes. */
   huespedesMaximos?: number;
   /**
+   * Rango inicial "checkIn/checkOut" cuando el usuario llegó desde el
+   * buscador del catálogo con fechas elegidas. Si NO viene, el cotizador
+   * arranca vacío esperando input — NO precarga un default sintético.
+   */
+  initialRange?: string;
+  /**
+   * Huéspedes inicial (total) cuando vienen del buscador. Si NO viene, el
+   * selector arranca vacío.
+   */
+  initialGuests?: number;
+  /**
    * Se invoca cada vez que cambia la cotización: con un `QuoteResult` cuando
    * el cálculo es exitoso (incluso parcial con `errores`), o con `null` cuando
    * faltan datos / hay error fatal. Permite al padre sincronizar el header del
@@ -43,21 +54,15 @@ function parseRange(range: string): { checkIn: string; checkOut: string } | null
 }
 
 /**
- * Range default dinámico: próximo viernes desde hoy + 3 noches (jue-dom típico
- * de escape de fin de semana). Se calcula en cada montaje para no quedar nunca
- * desfasado en el pasado.
+ * Parsea "2 adultos en total" en el shape de Guests que AvailabilityBar
+ * espera. Como solo recibimos un total agregado en los query params, lo
+ * volcamos todo a `adultos` (es la convención del buscador del catálogo).
  */
-function defaultRange(): string {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const dow = today.getDay(); // 0 dom, 5 vie
-  const daysToFriday = (5 - dow + 7) % 7 || 7;
-  const checkIn = new Date(today);
-  checkIn.setDate(today.getDate() + daysToFriday);
-  const checkOut = new Date(checkIn);
-  checkOut.setDate(checkIn.getDate() + 3);
-  const fmt = (d: Date) => d.toISOString().slice(0, 10);
-  return `${fmt(checkIn)}/${fmt(checkOut)}`;
+function expandGuests(total: number | undefined): Partial<{
+  adultos: number; ninos: number; bebes: number; mascotas: number
+}> | undefined {
+  if (!total || total < 1) return undefined;
+  return { adultos: total, ninos: 0, bebes: 0, mascotas: 0 };
 }
 
 /* ── Componente ───────────────────────────────────────────────── */
@@ -67,12 +72,18 @@ export default function Cotizador({
   apartamentoNombre,
   nochesMinimas = 2,
   huespedesMaximos = 4,
+  initialRange,
+  initialGuests,
   onQuoteChange,
 }: CotizadorProps) {
   const [showSolicitudModal, setShowSolicitudModal] = useState(false);
-  // El default se calcula UNA VEZ por mount (no en module-load) para que
-  // siempre arranque desde "hoy" relativo, no desde una fecha hardcoded.
-  const initialRange = useMemo(() => defaultRange(), []);
+  // Initial range/guests: solo si vienen del buscador del catálogo. Si NO
+  // hay contexto previo, el cotizador arranca VACÍO (sin fechas preselectas
+  // ni huéspedes precargados) y espera input del usuario. Esto evita mostrar
+  // una "estadía hardcodeada" en el detalle cuando el usuario clickeó una
+  // card sin filtrar antes.
+  const startRange = useMemo(() => initialRange ?? '', [initialRange]);
+  const startGuests = useMemo(() => expandGuests(initialGuests), [initialGuests]);
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [huespedes, setHuespedes] = useState(0);
@@ -149,10 +160,11 @@ export default function Cotizador({
         </p>
       </header>
 
-      {/* Selectores de fechas y huéspedes */}
+      {/* Selectores de fechas y huéspedes — sin defaults sintéticos cuando
+          el usuario no llegó con filtros del buscador. */}
       <AvailabilityBar
-        defaultRange={initialRange}
-        defaultGuests={{ adultos: 2, ninos: 0, bebes: 0, mascotas: 0 }}
+        defaultRange={startRange}
+        defaultGuests={startGuests}
         hideSearchButton
         maxTotalGuests={huespedesMaximos}
         onSelectionChange={onSelectionChange}

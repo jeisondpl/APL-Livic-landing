@@ -15,10 +15,12 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Heart, Star } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { PublicApartamentoSummary } from '@/lib/api';
 import { resolveHeroPhoto } from '@/lib/hero-fallback';
+import CardPhotoSlider from './CardPhotoSlider';
 
 interface Props {
   apartment: PublicApartamentoSummary;
@@ -83,9 +85,19 @@ export default function ApartmentSearchCard({
   noches = 2,
 }: Props) {
   const [favorited, setFavorited] = useState(false);
+  // Si el usuario ya filtró en /catalogo (range, guests), propagamos esos
+  // valores al detalle para que el Cotizador arranque con esos datos en vez
+  // de quedar vacío. La card en "Nuestros alojamientos" (idle, sin search)
+  // no tiene esos params → el detalle queda vacío esperando input.
+  const searchParams = useSearchParams();
 
   const hero = resolveHeroPhoto(apartment.heroPhoto, apartment.numero);
   const price = computePriceForNights(apartment.pricingVigente, noches);
+
+  // Fotos para el slider: si el backend trae galería, la usamos; sino, dejamos
+  // solo el hero (que ya puede ser placeholder genérico). Filter por src válido.
+  const sliderPhotos = (apartment.fotos ?? []).filter((f) => f.src);
+  const hasGallery = sliderPhotos.length > 0;
 
   // Título solicitado: nombre del apartamento + edificio
   const title = `${apartment.nombre} · ${apartment.edificio.nombre}`;
@@ -97,23 +109,41 @@ export default function ApartmentSearchCard({
   const rating = apartment.calificacion ?? 4.85;
   const resenas = apartment.resenas ?? 0;
 
-  const href = `/catalogo/${apartment.slug}`;
+  const href = useMemo(() => {
+    const path = `/catalogo/${apartment.slug}`;
+    const sp = new URLSearchParams();
+    const range = searchParams.get('range');
+    const guests = searchParams.get('guests');
+    if (range) sp.set('range', range);
+    if (guests) sp.set('guests', guests);
+    const qs = sp.toString();
+    return qs ? `${path}?${qs}` : path;
+  }, [apartment.slug, searchParams]);
 
   return (
     <Link
       href={href}
       className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-livic-pink/40 rounded-3xl"
     >
-      {/* ── Foto ──────────────────────────────────────────── */}
+      {/* ── Foto / Slider ─────────────────────────────────── */}
       <div className="relative aspect-square w-full overflow-hidden rounded-3xl bg-gray-100">
-        <Image
-          src={hero.src}
-          alt={hero.alt}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 320px"
-          quality={80}
-        />
+        {hasGallery ? (
+          /* Slider con flechas + dots cuando hay galería del backend */
+          <CardPhotoSlider
+            photos={sliderPhotos}
+            fallbackAlt={hero.alt}
+          />
+        ) : (
+          /* Fallback: hero único (sin galería) — preserva el zoom al hover */
+          <Image
+            src={hero.src}
+            alt={hero.alt}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 320px"
+            quality={80}
+          />
+        )}
 
         {/* Heart top-right */}
         <button
@@ -124,7 +154,7 @@ export default function ApartmentSearchCard({
             e.preventDefault();
             setFavorited((v) => !v);
           }}
-          className="absolute top-3 right-3 z-10 p-2 rounded-full bg-white/40 backdrop-blur-sm hover:bg-white/60 transition-colors"
+          className="absolute top-3 right-3 z-20 p-2 rounded-full bg-white/40 backdrop-blur-sm hover:bg-white/60 transition-colors"
         >
           <Heart
             size={22}
