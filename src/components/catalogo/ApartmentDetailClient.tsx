@@ -17,6 +17,7 @@ import {
 import type { Apartment } from '@/data/apartments'
 import AvailabilityBar from '@/components/catalogo/AvailabilityBar'
 import Cotizador from '@/components/catalogo/Cotizador'
+import MarkdownText from '@/components/catalogo/MarkdownText'
 
 // ── Variantes de animación ────────────────────────────────────────────────────
 
@@ -273,8 +274,11 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
       }).format(precio)
     : null
 
-  // Hero + todas las fotos de galería
-  const fotos = [apartment.heroPhoto, ...apartment.galeria]
+  // Galería del backend (Cloudinary). Si está vacía, `ficha-to-apartment` ya
+  // cae al hero como único elemento. No prefijamos heroPhoto acá para evitar
+  // duplicarlo o forzar el placeholder genérico como primera foto cuando el
+  // apto SÍ tiene galería real en el back.
+  const fotos = apartment.galeria
 
   return (
     <div className="max-w-6xl mx-auto px-4 md:px-8 py-6">
@@ -354,15 +358,15 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
             </p>
           </SectionCard>
 
-          {/* Descripción larga */}
+          {/* Descripción larga (markdown renderizado con saltos, listas, negritas) */}
           <SectionCard>
             <h2 className="text-base font-bold text-gray-900 mb-3">Sobre el apartamento</h2>
-            <p className="text-gray-600 text-sm leading-relaxed mb-4">
-              {apartment.descripcionLarga}
-            </p>
-            <p className="text-livic-purple italic text-sm">
-              &ldquo;{apartment.frasePosituelo}&rdquo;
-            </p>
+            <MarkdownText source={apartment.descripcionLarga} compact />
+            {apartment.frasePosituelo && (
+              <p className="text-livic-purple italic text-sm mt-4">
+                &ldquo;{apartment.frasePosituelo}&rdquo;
+              </p>
+            )}
           </SectionCard>
 
           {/* Amenidades */}
