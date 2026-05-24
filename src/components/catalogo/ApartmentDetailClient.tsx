@@ -13,11 +13,17 @@ import {
   Star,
   LayoutGrid,
   X,
+  Eye,
+  Sparkles,
+  Target,
+  Info,
 } from 'lucide-react'
 import type { Apartment } from '@/data/apartments'
 import AvailabilityBar from '@/components/catalogo/AvailabilityBar'
 import Cotizador from '@/components/catalogo/Cotizador'
 import MarkdownText from '@/components/catalogo/MarkdownText'
+import MarketingList from '@/components/catalogo/MarketingList'
+import CollapsibleSection from '@/components/catalogo/CollapsibleSection'
 
 // ── Variantes de animación ────────────────────────────────────────────────────
 
@@ -333,9 +339,23 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
               </span>
             </div>
 
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight mb-4">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight mb-3">
               {apartment.nombre}
             </h1>
+
+            {/* Vistas — subtítulo aspiracional bajo el título */}
+            {apartment.vistas && apartment.vistas.length > 0 && (
+              <div className="flex items-center gap-2 mb-4 text-sm">
+                <Eye size={16} className="text-livic-purple flex-shrink-0" />
+                <span className="text-gray-600">
+                  <span className="font-semibold text-livic-purple">Vistas:</span>{' '}
+                  {apartment.vistas.slice(0, 3).join(' · ')}
+                  {apartment.vistas.length > 3 && (
+                    <span className="text-gray-400"> · +{apartment.vistas.length - 3} más</span>
+                  )}
+                </span>
+              </div>
+            )}
 
             {/* Specs row */}
             <div className="flex flex-wrap items-center gap-5 text-gray-500 mb-4">
@@ -369,6 +389,33 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
             )}
           </SectionCard>
 
+          {/* Por qué te va a encantar (fortalezas) + Ideal para (huespedIdeal) */}
+          {((apartment.fortalezas?.length ?? 0) > 0 || (apartment.huespedIdeal?.length ?? 0) > 0) && (
+            <SectionCard>
+              {apartment.fortalezas && apartment.fortalezas.length > 0 && (
+                <MarketingList
+                  title="Por qué te va a encantar"
+                  titleIcon={<Sparkles size={16} />}
+                  items={apartment.fortalezas}
+                  tone="green"
+                  layout="grid"
+                  iconPerItem="check"
+                />
+              )}
+              {apartment.huespedIdeal && apartment.huespedIdeal.length > 0 && (
+                <div className={apartment.fortalezas && apartment.fortalezas.length > 0 ? 'mt-5' : ''}>
+                  <MarketingList
+                    title="Ideal para"
+                    titleIcon={<Target size={16} />}
+                    items={apartment.huespedIdeal}
+                    tone="purple"
+                    layout="chips"
+                  />
+                </div>
+              )}
+            </SectionCard>
+          )}
+
           {/* Amenidades */}
           <SectionCard>
             <h2 className="text-base font-bold text-gray-900 mb-4">Amenidades</h2>
@@ -390,6 +437,19 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
                 </div>
               ))}
             </div>
+
+            {/* No incluido — transparente, al fondo de la sección de amenidades */}
+            {apartment.noIncluidos.length > 0 && (
+              <div className="mt-5 pt-5 border-t border-gray-100">
+                <MarketingList
+                  title="Lo que necesitarás traer"
+                  items={apartment.noIncluidos}
+                  tone="gray"
+                  layout="list"
+                  iconPerItem="cross"
+                />
+              </div>
+            )}
           </SectionCard>
 
           {/* Check-in / Check-out */}
@@ -422,6 +482,25 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
               </div>
             )}
           </SectionCard>
+
+          {/* Cosas a tener en cuenta (debilidades — disclosure honest) */}
+          {apartment.debilidades && apartment.debilidades.length > 0 && (
+            <CollapsibleSection
+              title="Cosas a tener en cuenta"
+              icon={<Info size={16} />}
+              tone="amber"
+              defaultOpen={false}
+            >
+              <ul className="space-y-2">
+                {apartment.debilidades.map((item, i) => (
+                  <li key={`${item}-${i}`} className="flex items-start gap-2 text-sm text-gray-700 leading-relaxed">
+                    <span className="mt-1 text-amber-500 text-xs flex-shrink-0">•</span>
+                    <span className="flex-1">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </CollapsibleSection>
+          )}
 
           {/* Anfitrión */}
           <SectionCard>

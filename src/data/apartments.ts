@@ -94,6 +94,17 @@ export interface Apartment {
   // ── Características badge-level
   badges: string[];
 
+  // ── Listas marketing extendidas (opcionales para backwards-compat con
+  //    los aptos seed-eados en data/apartments.ts que aún no las tienen)
+  /** Vistas desde el apto: "Mar Caribe", "Sierra Nevada", etc. */
+  vistas?: string[];
+  /** Lo MEJOR del apto — renderizado como "Por qué te va a encantar". */
+  fortalezas?: string[];
+  /** Disclaimers transparentes — "Cosas a tener en cuenta" (colapsable). */
+  debilidades?: string[];
+  /** Perfiles de huésped objetivo — chips "Ideal para". */
+  huespedIdeal?: string[];
+
   // ── Multimedia
   /** Foto principal (hero) */
   heroPhoto: ApartmentPhoto;

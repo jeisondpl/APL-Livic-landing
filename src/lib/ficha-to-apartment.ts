@@ -200,6 +200,15 @@ export function publicFichaToApartment(ficha: PublicFicha): Apartment {
     servicios,
     noIncluidos: asStringArray(apt.noIncluidos),
     badges: asStringArray(apt.badges),
+    // Listas marketing del PMS — usadas en el detalle del catálogo:
+    //   - vistas: en el header del hero ("👁 Mar Caribe · Sierra Nevada")
+    //   - fortalezas: bloque "Por qué te va a encantar" (cards verdes)
+    //   - debilidades: "Cosas a tener en cuenta" (colapsable amber)
+    //   - huespedIdeal: chips "Ideal para" (purple)
+    vistas: asStringArray(apt.vistas),
+    fortalezas: asStringArray(apt.fortalezas),
+    debilidades: asStringArray(apt.debilidades),
+    huespedIdeal: asStringArray(apt.huespedIdeal),
     heroPhoto: hero,
     galeria,
     descripcionCorta,
