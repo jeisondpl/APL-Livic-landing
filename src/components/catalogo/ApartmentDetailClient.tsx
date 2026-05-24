@@ -24,6 +24,7 @@ import Cotizador from '@/components/catalogo/Cotizador'
 import MarkdownText from '@/components/catalogo/MarkdownText'
 import MarketingList from '@/components/catalogo/MarketingList'
 import CollapsibleSection from '@/components/catalogo/CollapsibleSection'
+import { deriveAllNotas } from '@/lib/derive-notas'
 
 // ── Variantes de animación ────────────────────────────────────────────────────
 
@@ -466,21 +467,29 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
               </div>
             </div>
 
-            {apartment.notas.length > 0 && (
-              <div className="bg-livic-yellow/10 border border-livic-yellow/30 rounded-2xl p-4">
-                <p className="text-xs font-bold text-amber-700 uppercase tracking-wide mb-2">
-                  Información importante
-                </p>
-                <ul className="space-y-2">
-                  {apartment.notas.map((nota) => (
-                    <li key={nota} className="flex items-start gap-2">
-                      <span className="mt-0.5 text-livic-yellow text-xs flex-shrink-0">⚠</span>
-                      <span className="text-gray-600 text-sm leading-snug">{nota}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            {/* Información importante — auto-derivada de campos estructurados
+                (manilla, silencio) + notas custom del operador sin duplicar.
+                Cambiar costoManillaPersona en el PMS actualiza el texto AQUÍ
+                automáticamente. */}
+            {(() => {
+              const notas = deriveAllNotas(apartment)
+              if (notas.length === 0) return null
+              return (
+                <div className="bg-livic-yellow/10 border border-livic-yellow/30 rounded-2xl p-4">
+                  <p className="text-xs font-bold text-amber-700 uppercase tracking-wide mb-2">
+                    Información importante
+                  </p>
+                  <ul className="space-y-2">
+                    {notas.map((nota, i) => (
+                      <li key={`${nota.source}-${i}`} className="flex items-start gap-2">
+                        <span className="mt-0.5 text-livic-yellow text-xs flex-shrink-0">⚠</span>
+                        <span className="text-gray-600 text-sm leading-snug">{nota.text}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            })()}
           </SectionCard>
 
           {/* Cosas a tener en cuenta (debilidades — disclosure honest) */}

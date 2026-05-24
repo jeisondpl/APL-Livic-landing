@@ -209,6 +209,13 @@ export function publicFichaToApartment(ficha: PublicFicha): Apartment {
     fortalezas: asStringArray(apt.fortalezas),
     debilidades: asStringArray(apt.debilidades),
     huespedIdeal: asStringArray(apt.huespedIdeal),
+    // Campos estructurados de acceso — el catálogo los usa para auto-generar
+    // notas dinámicas en lugar de depender de strings legacy en `notas`.
+    requiereManilla: apt.requiereManilla ?? undefined,
+    costoManillaPersona: apt.costoManillaPersona ?? null,
+    manillaSoloTarjeta: apt.manillaSoloTarjeta ?? undefined,
+    silencioDesde: apt.silencioDesde ?? null,
+    silencioHasta: apt.silencioHasta ?? null,
     heroPhoto: hero,
     galeria,
     descripcionCorta,

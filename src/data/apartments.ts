@@ -105,6 +105,18 @@ export interface Apartment {
   /** Perfiles de huésped objetivo — chips "Ideal para". */
   huespedIdeal?: string[];
 
+  // ── Acceso al conjunto (auto-genera notas del catálogo en runtime) ─
+  /** Si el conjunto exige una manilla/pulsera de acceso. */
+  requiereManilla?: boolean;
+  /** Costo COP por persona de la manilla. String numérico (ej "57500.00"). */
+  costoManillaPersona?: string | null;
+  /** Si la manilla se paga SOLO con tarjeta (no efectivo). */
+  manillaSoloTarjeta?: boolean;
+  /** Hora desde la que empieza el silencio en el conjunto (HH:MM). */
+  silencioDesde?: string | null;
+  /** Hora hasta la que dura el silencio (HH:MM). */
+  silencioHasta?: string | null;
+
   // ── Multimedia
   /** Foto principal (hero) */
   heroPhoto: ApartmentPhoto;

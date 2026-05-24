@@ -149,6 +149,14 @@ export interface PublicApartamentoDetalle {
   nochesMinimas: number | null;
   nochesMaximas: number | null;
   huespedesRecomendados: number | null;
+  // Acceso al conjunto — usados por el catálogo para auto-generar la nota
+  // "Manilla de acceso al conjunto: $X COP por persona..."
+  requiereManilla: boolean | null;
+  costoManillaPersona: string | null;
+  manillaSoloTarjeta: boolean | null;
+  silencioDesde: string | null;
+  silencioHasta: string | null;
+  tipoAcceso: string | null;
 }
 
 export interface PublicFicha {
@@ -194,6 +202,12 @@ export interface PublicApartamentoSummary {
   };
   /** JSON arbitrario; cuando existe debe ser un { src, alt }. */
   heroPhoto: ApartmentHero | null;
+  /**
+   * Top fotos de la galería (hasta 5), ordenadas por `orden` ASC.
+   * Alimentan el slider de las cards del catálogo. Array vacío si el apto no
+   * tiene fotos subidas todavía.
+   */
+  fotos: Array<{ src: string; alt: string | null }>;
   pricingVigente: {
     moneda: string;
     precioNetoEntreSemana: string | null;
