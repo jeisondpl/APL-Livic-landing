@@ -681,6 +681,7 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
               {apartment.apiSlug && (
                 <Cotizador
                   apiSlug={apartment.apiSlug}
+                  apartamentoNombre={apartment.nombre}
                   huespedesMaximos={apartment.huespedes}
                   nochesMinimas={2}
                   onQuoteChange={setCurrentQuote}

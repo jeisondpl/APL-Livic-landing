@@ -3,11 +3,14 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AlertTriangle, CalendarOff, RefreshCw } from 'lucide-react';
 import AvailabilityBar from '@/components/catalogo/AvailabilityBar';
+import SolicitudReservaModal from '@/components/catalogo/SolicitudReservaModal';
 import { fetchQuote, type QuoteResult } from '@/lib/api';
 
 interface CotizadorProps {
   /** Slug del apartamento en la API LIVIC (puede diferir del slug del catálogo). */
   apiSlug: string;
+  /** Nombre del apto para mostrar en el header del modal de solicitud. */
+  apartamentoNombre: string;
   /** Mínimo de noches del apartamento (informativo). */
   nochesMinimas?: number;
   /** Capacidad máxima de huéspedes. */
@@ -61,10 +64,12 @@ function defaultRange(): string {
 
 export default function Cotizador({
   apiSlug,
+  apartamentoNombre,
   nochesMinimas = 2,
   huespedesMaximos = 4,
   onQuoteChange,
 }: CotizadorProps) {
+  const [showSolicitudModal, setShowSolicitudModal] = useState(false);
   // El default se calcula UNA VEZ por mount (no en module-load) para que
   // siempre arranque desde "hoy" relativo, no desde una fecha hardcoded.
   const initialRange = useMemo(() => defaultRange(), []);
@@ -279,7 +284,8 @@ export default function Cotizador({
       <div className='mt-6 space-y-2'>
         <button
           type='button'
-          disabled={loading || !puedeCotizar || sinTarifaTotal}
+          onClick={() => setShowSolicitudModal(true)}
+          disabled={loading || !puedeCotizar || sinTarifaTotal || !quote}
           className='w-full bg-livic-black hover:bg-gray-900 disabled:opacity-30 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-2xl text-sm transition-colors'
         >
           Solicitar reserva
@@ -295,6 +301,18 @@ export default function Cotizador({
           {loading ? 'Calculando…' : 'Recalcular'}
         </button>
       </div>
+
+      {/* Modal de solicitud — sólo renderiza cuando hay un quote válido
+          y el usuario clickeó "Solicitar reserva". */}
+      {quote && !sinTarifaTotal && (
+        <SolicitudReservaModal
+          open={showSolicitudModal}
+          onClose={() => setShowSolicitudModal(false)}
+          apiSlug={apiSlug}
+          apartamentoNombre={apartamentoNombre}
+          quote={quote}
+        />
+      )}
     </section>
   );
 }

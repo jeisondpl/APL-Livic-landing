@@ -306,3 +306,49 @@ export async function fetchQuote(slug: string, req: QuoteRequest): Promise<Quote
 export async function fetchPublicFicha(slug: string): Promise<PublicFicha> {
   return apiGet<PublicFicha>(`/api/public/apartamentos/${encodeURIComponent(slug)}`);
 }
+
+/* ════════════════════ Solicitud de cotización ════════════════════ */
+
+export interface SolicitudCotizacionRequest {
+  checkIn: string;
+  checkOut: string;
+  huespedes: number;
+  nombre: string;
+  email: string;
+  telefono: string;
+}
+
+export interface SolicitudCotizacionResponse {
+  id: string;
+  apartamentoSlug: string;
+  estado: 'pendiente' | 'confirmada' | 'rechazada' | 'expirada' | 'cancelada';
+  createdAt: string;
+  quote: QuoteResult;
+}
+
+export async function submitSolicitudCotizacion(
+  slug: string,
+  body: SolicitudCotizacionRequest,
+): Promise<SolicitudCotizacionResponse> {
+  const url = new URL(
+    `/api/public/apartamentos/${encodeURIComponent(slug)}/solicitar`,
+    API_BASE_URL,
+  );
+  const res = await fetch(url.toString(), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try {
+      const errBody = await res.json();
+      msg = errBody?.message ?? errBody?.error?.message ?? msg;
+    } catch {
+      // ignore
+    }
+    throw new Error(msg);
+  }
+  const env = (await res.json()) as ApiEnvelope<SolicitudCotizacionResponse>;
+  return env.data;
+}
