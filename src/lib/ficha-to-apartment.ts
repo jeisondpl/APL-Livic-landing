@@ -71,6 +71,14 @@ function parseHost(raw: unknown): ApartmentHost | null {
 
 /* ──────────────────── Pricing → precioNoche ──────────────────── */
 
+/**
+ * Devuelve el precio MÍNIMO entre los dos tarifarios (entre semana / fin de
+ * semana) — se renderiza como "Desde $X / noche" en las cards. Antes
+ * mostrábamos el promedio aritmético `(ES + FS) / 2`, pero ese midpoint no
+ * corresponde a ninguna noche real configurada en el PMS y confundía al
+ * usuario (ej. 500k ES + 530k FS → "$515.000" que no existe). El mínimo
+ * representa el "desde" honesto y replica el patrón de Airbnb/Booking.
+ */
 function derivePrecioNoche(p: PublicPricing | null): number | undefined {
   if (!p) return undefined;
   const com = p.comisionAirbnbPct ? parseFloat(p.comisionAirbnbPct) / 100 : 0.03;
@@ -88,11 +96,8 @@ function derivePrecioNoche(p: PublicPricing | null): number | undefined {
       : null;
 
   if (pubES == null && pubFS == null) return undefined;
-  const avg =
-    pubES != null && pubFS != null
-      ? (pubES + pubFS) / 2
-      : (pubES ?? pubFS!);
-  return Math.round(avg);
+  const min = pubES != null && pubFS != null ? Math.min(pubES, pubFS) : (pubES ?? pubFS!);
+  return Math.round(min);
 }
 
 /* ──────────────────── Mapper principal ──────────────────── */

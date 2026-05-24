@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { AlertTriangle, CalendarOff, RefreshCw } from 'lucide-react';
 import AvailabilityBar from '@/components/catalogo/AvailabilityBar';
 import { fetchQuote, type QuoteResult } from '@/lib/api';
 
@@ -12,6 +12,13 @@ interface CotizadorProps {
   nochesMinimas?: number;
   /** Capacidad máxima de huéspedes. */
   huespedesMaximos?: number;
+  /**
+   * Se invoca cada vez que cambia la cotización: con un `QuoteResult` cuando
+   * el cálculo es exitoso (incluso parcial con `errores`), o con `null` cuando
+   * faltan datos / hay error fatal. Permite al padre sincronizar el header del
+   * precio con la cotización actual.
+   */
+  onQuoteChange?: (quote: QuoteResult | null) => void;
 }
 
 /* ── Helpers ──────────────────────────────────────────────────── */
@@ -32,17 +39,49 @@ function parseRange(range: string): { checkIn: string; checkOut: string } | null
   return { checkIn: a.trim(), checkOut: b.trim() };
 }
 
-const DEFAULT_RANGE = '2026-05-12/2026-05-19';
+/**
+ * Range default dinámico: próximo viernes desde hoy + 3 noches (jue-dom típico
+ * de escape de fin de semana). Se calcula en cada montaje para no quedar nunca
+ * desfasado en el pasado.
+ */
+function defaultRange(): string {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const dow = today.getDay(); // 0 dom, 5 vie
+  const daysToFriday = (5 - dow + 7) % 7 || 7;
+  const checkIn = new Date(today);
+  checkIn.setDate(today.getDate() + daysToFriday);
+  const checkOut = new Date(checkIn);
+  checkOut.setDate(checkIn.getDate() + 3);
+  const fmt = (d: Date) => d.toISOString().slice(0, 10);
+  return `${fmt(checkIn)}/${fmt(checkOut)}`;
+}
 
 /* ── Componente ───────────────────────────────────────────────── */
 
-export default function Cotizador({ apiSlug, nochesMinimas = 2, huespedesMaximos = 4 }: CotizadorProps) {
+export default function Cotizador({
+  apiSlug,
+  nochesMinimas = 2,
+  huespedesMaximos = 4,
+  onQuoteChange,
+}: CotizadorProps) {
+  // El default se calcula UNA VEZ por mount (no en module-load) para que
+  // siempre arranque desde "hoy" relativo, no desde una fecha hardcoded.
+  const initialRange = useMemo(() => defaultRange(), []);
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [huespedes, setHuespedes] = useState(0);
   const [quote, setQuote] = useState<QuoteResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // ¿La cotización vino sin tarifa para alguna noche? Distinguimos el caso
+  // "no se pudo cotizar nada" (subtotal=0) del caso "cotización parcial"
+  // (subtotal>0 con un warning), porque la UX es distinta.
+  const sinTarifaTotal = Boolean(quote && quote.subtotal === 0 && (quote.errores?.length ?? 0) > 0);
+  const sinTarifaParcial = Boolean(
+    quote && quote.subtotal > 0 && (quote.errores?.length ?? 0) > 0,
+  );
 
   const onSelectionChange = useCallback((range: string, totalGuests: number) => {
     const parsed = parseRange(range);
@@ -74,9 +113,11 @@ export default function Cotizador({ apiSlug, nochesMinimas = 2, huespedesMaximos
     try {
       const r = await fetchQuote(apiSlug, { checkIn, checkOut, huespedes });
       setQuote(r);
+      onQuoteChange?.(r);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cotizar.');
       setQuote(null);
+      onQuoteChange?.(null);
     } finally {
       setLoading(false);
     }
@@ -85,6 +126,7 @@ export default function Cotizador({ apiSlug, nochesMinimas = 2, huespedesMaximos
   useEffect(() => {
     if (!puedeCotizar) {
       setQuote(null);
+      onQuoteChange?.(null);
       return;
     }
     const t = setTimeout(handleCotizar, 350);
@@ -104,7 +146,7 @@ export default function Cotizador({ apiSlug, nochesMinimas = 2, huespedesMaximos
 
       {/* Selectores de fechas y huéspedes */}
       <AvailabilityBar
-        defaultRange={DEFAULT_RANGE}
+        defaultRange={initialRange}
         defaultGuests={{ adultos: 2, ninos: 0, bebes: 0, mascotas: 0 }}
         hideSearchButton
         maxTotalGuests={huespedesMaximos}
@@ -141,13 +183,32 @@ export default function Cotizador({ apiSlug, nochesMinimas = 2, huespedesMaximos
         </p>
       )}
 
-      {/* Resultado */}
-      {quote && cumpleMinimo && !loading && (
+      {/* Sin tarifa total — no se pudo calcular nada para el rango pedido.
+          Reemplaza al breakdown numérico (que mostraría todos $0 sin sentido)
+          por un mensaje claro y CTA implícito (el calendario sigue arriba). */}
+      {sinTarifaTotal && !loading && (
+        <div className='mt-5 pt-5 border-t border-gray-100'>
+          <div className='flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-2xl'>
+            <CalendarOff className='w-5 h-5 mt-0.5 flex-shrink-0 text-amber-600' />
+            <div className='text-xs'>
+              <p className='font-semibold text-amber-900 mb-1'>Sin tarifas para estas fechas</p>
+              <p className='text-amber-700 leading-relaxed'>
+                Aún no se ha configurado el precio para el rango seleccionado.
+                Probá con otras fechas o consultanos por disponibilidad.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Resultado normal — incluye el caso "parcial" donde algunas noches
+          tienen tarifa y otras no (subtotal>0 con warning). */}
+      {quote && cumpleMinimo && !loading && !sinTarifaTotal && (
         <div className='mt-5 pt-5 border-t border-gray-100 space-y-3'>
-          {quote.errores && quote.errores.length > 0 && (
+          {sinTarifaParcial && quote.errores && (
             <p className='flex items-start gap-2 text-xs text-amber-700'>
               <AlertTriangle className='w-3.5 h-3.5 mt-0.5 flex-shrink-0' />
-              Cotización parcial: {quote.errores.join('; ')}
+              {quote.errores.join('; ')}
             </p>
           )}
 
@@ -181,7 +242,11 @@ export default function Cotizador({ apiSlug, nochesMinimas = 2, huespedesMaximos
           <div className='flex items-end justify-between pt-4 border-t border-gray-100'>
             <div>
               <p className='text-[10px] text-gray-400 uppercase tracking-[0.12em]'>Total</p>
-              <p className='text-[10px] text-gray-300 mt-0.5'>desde {quote.pricingVigenciaDesde}</p>
+              {quote.pricingVigenciaDesde && (
+                <p className='text-[10px] text-gray-300 mt-0.5'>
+                  tarifa vigente desde {quote.pricingVigenciaDesde}
+                </p>
+              )}
             </div>
             <p className='text-2xl font-semibold text-gray-900 tabular-nums tracking-tight'>
               {fmtCurrency(quote.total, quote.moneda)}
@@ -194,7 +259,7 @@ export default function Cotizador({ apiSlug, nochesMinimas = 2, huespedesMaximos
       <div className='mt-6 space-y-2'>
         <button
           type='button'
-          disabled={loading || !puedeCotizar}
+          disabled={loading || !puedeCotizar || sinTarifaTotal}
           className='w-full bg-livic-black hover:bg-gray-900 disabled:opacity-30 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-2xl text-sm transition-colors'
         >
           Solicitar reserva

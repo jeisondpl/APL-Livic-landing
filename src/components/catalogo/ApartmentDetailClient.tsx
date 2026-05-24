@@ -19,6 +19,7 @@ import {
   Info,
 } from 'lucide-react'
 import type { Apartment } from '@/data/apartments'
+import type { QuoteResult } from '@/lib/api'
 import AvailabilityBar from '@/components/catalogo/AvailabilityBar'
 import Cotizador from '@/components/catalogo/Cotizador'
 import MarkdownText from '@/components/catalogo/MarkdownText'
@@ -262,6 +263,12 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
   const resenas  = apartment.anfitrionPrincipal.resenas ?? 0
   const precio   = apartment.precioNoche
 
+  // Estado lifted desde el Cotizador: el header del booking card pasa de
+  // "Desde $X / noche" (sin fechas o cotización inválida) a
+  // "Promedio $Y / noche" (cuando hay quote válido). Así el header refleja
+  // el precio real para las fechas que el usuario está mirando.
+  const [currentQuote, setCurrentQuote] = useState<QuoteResult | null>(null)
+
   // Volver al estado previo (resultados con fechas/huéspedes preservados) usando
   // el historial del browser. Si el usuario aterrizó directo en /catalogo/[slug]
   // (p. ej. share link), `router.back()` puede no aplicar — fallback a /catalogo.
@@ -273,13 +280,31 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
     }
   }, [router])
 
-  const precioFormateado = precio != null
-    ? new Intl.NumberFormat('es-CO', {
-        style: 'currency',
-        currency: 'COP',
-        maximumFractionDigits: 0,
-      }).format(precio)
-    : null
+  const fmtCOP = useCallback((n: number) =>
+    new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: currentQuote?.moneda ?? 'COP',
+      maximumFractionDigits: 0,
+    }).format(n),
+  [currentQuote?.moneda])
+
+  // Precio del header:
+  //  - Con quote válido (total > 0, sin noches sin tarifa): promedio real
+  //    por noche (total ÷ noches) — refleja lo que efectivamente paga el
+  //    huésped para esas fechas.
+  //  - Sin quote o quote sin total: "Desde $X" usando el mínimo configurado
+  //    en el PMS (apartment.precioNoche ya es min(ES, FS)).
+  const tieneQuoteValida = Boolean(
+    currentQuote &&
+    currentQuote.total > 0 &&
+    currentQuote.noches > 0 &&
+    !currentQuote.errores?.length,
+  )
+  const precioHeaderNumber = tieneQuoteValida && currentQuote
+    ? Math.round(currentQuote.total / currentQuote.noches)
+    : precio ?? null
+  const precioFormateado = precioHeaderNumber != null ? fmtCOP(precioHeaderNumber) : null
+  const precioLabel = tieneQuoteValida ? 'promedio' : 'desde'
 
   // Galería del backend (Cloudinary). Si está vacía, `ficha-to-apartment` ya
   // cae al hero como único elemento. No prefijamos heroPhoto acá para evitar
@@ -608,12 +633,23 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
               {/* Precio */}
               <div className="mb-5">
                 {precioFormateado != null ? (
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-[2rem] font-bold text-gray-900 leading-none">
-                      {precioFormateado}
-                    </span>
-                    <span className="text-gray-400 text-sm">/ noche</span>
-                  </div>
+                  <>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-[2rem] font-bold text-gray-900 leading-none">
+                        {precioFormateado}
+                      </span>
+                      <span className="text-gray-400 text-sm">/ noche</span>
+                    </div>
+                    <p className="text-[11px] text-gray-400 mt-1">
+                      {precioLabel}
+                      {tieneQuoteValida && currentQuote && (
+                        <span className="text-gray-300">
+                          {' · '}
+                          {currentQuote.nochesEntreSemana} entre semana + {currentQuote.nochesFinDeSemana} fin de semana
+                        </span>
+                      )}
+                    </p>
+                  </>
                 ) : (
                   <p className="text-gray-500 text-sm">{apartment.edificio}</p>
                 )}
@@ -638,14 +674,12 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
 
               {/* Cotiza tu estadía — solo si el apartamento está sincronizado con la API LIVIC */}
               {apartment.apiSlug && (
-                <>
-                  <Cotizador
-                    apiSlug={apartment.apiSlug}
-                    huespedesMaximos={apartment.huespedes}
-                    nochesMinimas={2}
-                  />
-                 
-                </>
+                <Cotizador
+                  apiSlug={apartment.apiSlug}
+                  huespedesMaximos={apartment.huespedes}
+                  nochesMinimas={2}
+                  onQuoteChange={setCurrentQuote}
+                />
               )}
 
               {/* Badges (highlights) — título espejo del label del PMS */}

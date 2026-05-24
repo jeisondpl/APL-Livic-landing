@@ -260,6 +260,11 @@ function HeroPanel({
 // amenidades, políticas…). La API pública solo expone un resumen, así que
 // derivamos el precio-noche del pricing vigente y rellenamos con defaults los
 // campos que la card no renderiza visualmente.
+/**
+ * Precio "desde" — mínimo entre tarifa entre-semana y fin-de-semana. Se
+ * renderiza en las cards como "Desde $X / noche". Antes era el promedio
+ * aritmético, pero ese midpoint no es un precio real configurado en el PMS.
+ */
 function computePricePerNight(
   pricing: PublicApartamentoSummary['pricingVigente'],
 ): number | undefined {
@@ -281,8 +286,8 @@ function computePricePerNight(
 
   if (pubES == null && pubFS == null) return undefined
 
-  const avg = pubES != null && pubFS != null ? (pubES + pubFS) / 2 : (pubES ?? pubFS!)
-  return Math.round(avg)
+  const min = pubES != null && pubFS != null ? Math.min(pubES, pubFS) : (pubES ?? pubFS!)
+  return Math.round(min)
 }
 
 function toApartmentShape(summary: PublicApartamentoSummary): Apartment {
