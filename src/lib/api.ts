@@ -32,9 +32,13 @@ export interface QuoteResult {
   descuentoPct: number;
   descuentoTipo: DescuentoTipo;
   descuentoMonto: number;
+  /** Descuento por número exacto de huéspedes (cargo plano, 0 si no aplica). */
+  descuentoHuespedesMonto: number;
+  /** Cuántos huéspedes matchearon la regla (null si no aplicó). */
+  descuentoHuespedesAplicadoA: number | null;
   /** Cargo plano de limpieza (1 vez por estadía, no aplica descuento). */
   tarifaLimpieza: number;
-  /** total = subtotal - descuentoMonto + tarifaLimpieza */
+  /** total = subtotal − descuentoMonto − descuentoHuespedesMonto + tarifaLimpieza */
   total: number;
   comisionAirbnbPct: number;
   comisionAirbnbMonto: number;

@@ -289,12 +289,12 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
   [currentQuote?.moneda])
 
   // Precio del header:
-  //  - Con quote válido (total > 0, sin noches sin tarifa): promedio real
-  //    por noche, calculado SOLO sobre las noches (excluye la tarifa de
-  //    limpieza). Si incluyéramos limpieza, una estadía corta inflaría el
-  //    "precio por noche" engañando al usuario.
-  //  - Sin quote o quote sin total: "Desde $X" usando el mínimo configurado
-  //    en el PMS (apartment.precioNoche ya es min(ES, FS)).
+  //  - Con quote válido: promedio real por noche, calculado SOLO sobre los
+  //    cargos por noche (excluye limpieza y descuento por huéspedes, que son
+  //    cargos planos por estadía). Si los incluyéramos, una estadía corta
+  //    inflaría/deflactaría artificialmente el "precio por noche".
+  //    Equivale a: (subtotal − descuentoMonto%) / noches.
+  //  - Sin quote: "Desde $X" usando el mínimo configurado (apartment.precioNoche).
   const tieneQuoteValida = Boolean(
     currentQuote &&
     currentQuote.total > 0 &&
@@ -302,7 +302,11 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
     !currentQuote.errores?.length,
   )
   const precioHeaderNumber = tieneQuoteValida && currentQuote
-    ? Math.round((currentQuote.total - currentQuote.tarifaLimpieza) / currentQuote.noches)
+    ? Math.round(
+        (currentQuote.total
+          - currentQuote.tarifaLimpieza
+          + currentQuote.descuentoHuespedesMonto) / currentQuote.noches,
+      )
     : precio ?? null
   const precioFormateado = precioHeaderNumber != null ? fmtCOP(precioHeaderNumber) : null
   const precioLabel = tieneQuoteValida ? 'promedio' : 'desde'

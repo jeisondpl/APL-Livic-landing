@@ -239,6 +239,17 @@ export default function Cotizador({
             </div>
           )}
 
+          {quote.descuentoHuespedesMonto > 0 && quote.descuentoHuespedesAplicadoA != null && (
+            <div className='flex items-baseline justify-between text-sm'>
+              <span className='text-emerald-700'>
+                Descuento por {quote.descuentoHuespedesAplicadoA} huésped{quote.descuentoHuespedesAplicadoA !== 1 ? 'es' : ''}
+              </span>
+              <span className='text-emerald-700 tabular-nums'>
+                − {fmtCurrency(quote.descuentoHuespedesMonto, quote.moneda)}
+              </span>
+            </div>
+          )}
+
           {quote.tarifaLimpieza > 0 && (
             <div className='flex items-baseline justify-between text-sm'>
               <span className='text-gray-500'>Tarifa de limpieza</span>
