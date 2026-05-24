@@ -16,6 +16,7 @@
  */
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Calendar, Users, AlertCircle, CheckCircle2, Send, MessageCircle } from 'lucide-react'
 import type { QuoteResult } from '@/lib/api'
@@ -51,6 +52,7 @@ export default function SolicitudReservaModal({
   apartamentoNombre,
   quote,
 }: Props) {
+  const router = useRouter()
   const [estado, setEstado] = useState<Estado>('form')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
@@ -186,6 +188,10 @@ export default function SolicitudReservaModal({
                   onClick={() => {
                     handleReintentar()
                     onClose()
+                    // Tras enviar la solicitud, el usuario queda en /catalogo/[slug]
+                    // del apto bloqueado (ya no está disponible). Lo mandamos al
+                    // listado para que pueda explorar otras opciones.
+                    router.push('/catalogo')
                   }}
                   className='w-full bg-livic-pink hover:bg-livic-pink/90 text-white font-semibold px-5 py-3 rounded-2xl text-sm transition-colors'
                 >
