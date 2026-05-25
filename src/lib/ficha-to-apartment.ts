@@ -159,6 +159,24 @@ export function publicFichaToApartment(ficha: PublicFicha): Apartment {
     icono: r.icono,
   }));
 
+  // Amenidades del edificio agrupadas por categoría (shape preferido por
+  // el componente nuevo "Espacios pensados para relajarte"). Si el endpoint
+  // no devuelve el campo (respuesta cacheada antigua), queda undefined y
+  // el componente cae al renderer plano de `edificioAmenidades`.
+  const edAmenByCatRaw = ficha.edificioAmenidadesByCategoria ?? [];
+  const edificioAmenidadesGrouped: ApartmentAmenityCategory[] = edAmenByCatRaw.map((c) => ({
+    titulo: c.categoria.titulo,
+    icono: c.categoria.icono,
+    items: c.items.map((i) => ({ nombre: i.nombre, icono: i.icono })),
+  }));
+
+  // Galería del edificio para el modal "Ver fotos del edificio".
+  const edFotosRaw = ficha.edificio?.fotos ?? [];
+  const edificioFotos: ApartmentPhoto[] = edFotosRaw.map((f) => ({
+    src: f.src,
+    alt: f.alt,
+  }));
+
   // Hosts (JSONB).
   const anfitrionPrincipal = parseHost(apt.anfitrionPrincipal) ?? {
     nombre: "Equipo LIVIC",
@@ -228,6 +246,8 @@ export function publicFichaToApartment(ficha: PublicFicha): Apartment {
     frasePosituelo,
     edificioAmenidades,
     edificioReglas,
+    edificioAmenidadesGrouped,
+    edificioFotos,
     checkIn: apt.checkIn ?? "3:00 p.m.",
     checkOut: apt.checkOut ?? "11:00 a.m.",
     notas: asStringArray(apt.notas),

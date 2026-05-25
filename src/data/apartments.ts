@@ -131,6 +131,11 @@ export interface Apartment {
   // ── Edificio
   edificioAmenidades: ApartmentAmenityItem[];
   edificioReglas: ApartmentAmenityItem[];
+  /** Amenidades del edificio agrupadas por categoría (preferido para la
+   *  sección "Espacios pensados para relajarte"). */
+  edificioAmenidadesGrouped?: ApartmentAmenityCategory[];
+  /** Galería de fotos del edificio (puede estar vacía). */
+  edificioFotos?: ApartmentPhoto[];
 
   // ── Check-in / Check-out
   checkIn: string;

@@ -58,6 +58,9 @@ export interface PublicEdificioDetalle {
   direccion: string;
   lat: string | null;
   lng: string | null;
+  /** Galería del edificio (puede estar vacía o ausente en respuestas
+   *  cacheadas anteriores al refactor — tolerar undefined). */
+  fotos?: PublicFoto[];
 }
 
 export interface PublicFoto {
@@ -176,7 +179,10 @@ export interface PublicFicha {
   fotos: PublicFoto[];
   servicios: PublicServicio[];
   amenidades: PublicAmenidadCategoria[];
+  /** @deprecated usar `edificioAmenidadesByCategoria` — mantenido por compat. */
   edificioAmenidades: PublicEdificioItem[];
+  /** Amenidades del edificio agrupadas por categoría (preferido). */
+  edificioAmenidadesByCategoria?: PublicAmenidadCategoria[];
   edificioReglas: PublicEdificioItem[];
 }
 

@@ -22,6 +22,8 @@ import type { Apartment } from '@/data/apartments'
 import type { QuoteResult } from '@/lib/api'
 import AvailabilityBar from '@/components/catalogo/AvailabilityBar'
 import Cotizador from '@/components/catalogo/Cotizador'
+import EdificioAmenidadesSection from '@/components/catalogo/EdificioAmenidadesSection'
+import EdificioFotosModal from '@/components/catalogo/EdificioFotosModal'
 import MarkdownText from '@/components/catalogo/MarkdownText'
 import MarketingList from '@/components/catalogo/MarketingList'
 import CollapsibleSection from '@/components/catalogo/CollapsibleSection'
@@ -286,6 +288,8 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
   // "Promedio $Y / noche" (cuando hay quote válido). Así el header refleja
   // el precio real para las fechas que el usuario está mirando.
   const [currentQuote, setCurrentQuote] = useState<QuoteResult | null>(null)
+  // Modal "Ver fotos del edificio" (galería del conjunto, no del apto).
+  const [edificioFotosOpen, setEdificioFotosOpen] = useState(false)
 
   // Volver al estado previo (resultados con fechas/huéspedes preservados) usando
   // el historial del browser. Si el usuario aterrizó directo en /catalogo/[slug]
@@ -465,9 +469,23 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
             </SectionCard>
           )}
 
-          {/* Amenidades */}
+          {/* Espacios pensados para relajarte — amenidades del EDIFICIO
+              (no del apto) + botón "Ver fotos del edificio".
+              Solo se monta si hay algo que mostrar (amenidades o fotos). */}
+          {((apartment.edificioAmenidadesGrouped?.length ?? 0) > 0 ||
+            (apartment.edificioFotos?.length ?? 0) > 0) && (
+            <EdificioAmenidadesSection
+              amenidades={apartment.edificioAmenidadesGrouped ?? []}
+              onOpenFotos={() => setEdificioFotosOpen(true)}
+              tieneFotos={(apartment.edificioFotos?.length ?? 0) > 0}
+            />
+          )}
+
+          {/* Lo que ofrece este apartamento — amenidades del APTO + "No
+              incluidos". Sigue siendo SectionCard separado para mantener la
+              jerarquía edificio (común) vs apto (interior). */}
           <SectionCard>
-            <h2 className="text-base font-bold text-gray-900 mb-4">Amenidades</h2>
+            <h2 className="text-base font-bold text-gray-900 mb-4">Lo que ofrece este apartamento</h2>
             <div className="space-y-5">
               {apartment.amenidades.slice(0, 3).map((cat) => (
                 <div key={cat.titulo}>
@@ -731,6 +749,16 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
         </motion.div>
 
       </div>
+
+      {/* Modal "Ver fotos del edificio" — sólo se monta cuando hay fotos */}
+      {(apartment.edificioFotos?.length ?? 0) > 0 && (
+        <EdificioFotosModal
+          open={edificioFotosOpen}
+          onClose={() => setEdificioFotosOpen(false)}
+          fotos={apartment.edificioFotos ?? []}
+          edificioNombre={apartment.edificio}
+        />
+      )}
     </div>
   )
 }
