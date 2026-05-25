@@ -59,19 +59,25 @@ export default function SolicitudReservaModal({
   const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
   const [telefono, setTelefono] = useState('')
+  // Habeas Data Colombia (Ley 1581/2012): autorización previa, expresa e
+  // informada obligatoria para tratar el teléfono del huésped y enviarlo a
+  // operadores LIVIC vía WhatsApp. Sin esto el envío sería ilegal.
+  const [consentimiento, setConsentimiento] = useState(false)
 
   // Reset al abrir/cerrar el modal: estado limpio en cada nueva sesión.
   useEffect(() => {
     if (open) {
       setEstado('form')
       setErrorMsg(null)
+      setConsentimiento(false)
     }
   }, [open])
 
   const formValido =
     nombre.trim().length >= 2 &&
     emailRegex.test(email.trim()) &&
-    phoneRegex.test(telefono.trim())
+    phoneRegex.test(telefono.trim()) &&
+    consentimiento
 
   async function handleSubmit() {
     if (!formValido) return
@@ -145,9 +151,11 @@ export default function SolicitudReservaModal({
                   nombre={nombre}
                   email={email}
                   telefono={telefono}
+                  consentimiento={consentimiento}
                   onNombre={setNombre}
                   onEmail={setEmail}
                   onTelefono={setTelefono}
+                  onConsentimiento={setConsentimiento}
                   errorMsg={errorMsg}
                 />
               ) : null}
@@ -215,9 +223,11 @@ interface FormContentProps {
   nombre: string
   email: string
   telefono: string
+  consentimiento: boolean
   onNombre: (v: string) => void
   onEmail: (v: string) => void
   onTelefono: (v: string) => void
+  onConsentimiento: (v: boolean) => void
   errorMsg: string | null
 }
 
@@ -226,9 +236,11 @@ function FormContent({
   nombre,
   email,
   telefono,
+  consentimiento,
   onNombre,
   onEmail,
   onTelefono,
+  onConsentimiento,
   errorMsg,
 }: FormContentProps) {
   return (
@@ -345,6 +357,35 @@ function FormContent({
             className='w-full px-4 py-3 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-livic-pink/50 focus:border-livic-pink transition-all'
           />
         </FieldLabel>
+
+        {/* Habeas Data Colombia — Ley 1581/2012: autorización previa y
+            expresa para tratar el teléfono del huésped y enviarlo a
+            operadores LIVIC vía WhatsApp. Sin esto el submit queda
+            deshabilitado. */}
+        <label className='flex items-start gap-2.5 p-3 bg-gray-50 rounded-2xl cursor-pointer border border-transparent hover:border-gray-200 transition-colors'>
+          <input
+            type='checkbox'
+            checked={consentimiento}
+            onChange={(e) => onConsentimiento(e.target.checked)}
+            className='mt-0.5 w-4 h-4 accent-livic-pink rounded flex-shrink-0'
+            aria-required='true'
+          />
+          <span className='text-[11px] text-gray-600 leading-relaxed'>
+            Autorizo a LIVIC a tratar mis datos personales (incluido mi teléfono)
+            con fines de contacto comercial sobre mi solicitud, conforme a la{' '}
+            <strong>Ley 1581 de 2012</strong> y la{' '}
+            <a
+              href='/privacidad'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='text-livic-pink hover:underline font-medium'
+              onClick={(e) => e.stopPropagation()}
+            >
+              política de privacidad
+            </a>
+            .
+          </span>
+        </label>
       </div>
 
       {errorMsg && (
