@@ -28,24 +28,30 @@ interface Props {
   onClose: () => void
   fotos: Foto[]
   edificioNombre: string
+  /** Si viene, abre directamente en lightbox carousel en ese índice (skip grid). */
+  initialLightboxIndex?: number | null
 }
 
-export default function EdificioFotosModal({ open, onClose, fotos, edificioNombre }: Props) {
+export default function EdificioFotosModal({ open, onClose, fotos, edificioNombre, initialLightboxIndex = null }: Props) {
   const dialogRef = useRef<HTMLDialogElement | null>(null)
   const [lightbox, setLightbox] = useState<number | null>(null)
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, dragFree: false })
 
   // Sync open/close del <dialog> nativo. Usar el método del DOM
   // (showModal/close) garantiza focus trap + backdrop click nativos.
+  // Si el caller pasó `initialLightboxIndex`, abrimos directo en lightbox.
   useEffect(() => {
     const dlg = dialogRef.current
     if (!dlg) return
     if (open && !dlg.open) {
       dlg.showModal()
+      if (initialLightboxIndex != null && initialLightboxIndex >= 0) {
+        setLightbox(initialLightboxIndex)
+      }
     } else if (!open && dlg.open) {
       dlg.close()
     }
-  }, [open])
+  }, [open, initialLightboxIndex])
 
   // Si el navegador cierra el <dialog> (ESC, backdrop click), notificar al padre.
   useEffect(() => {

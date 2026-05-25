@@ -289,7 +289,11 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
   // el precio real para las fechas que el usuario está mirando.
   const [currentQuote, setCurrentQuote] = useState<QuoteResult | null>(null)
   // Modal "Ver fotos del edificio" (galería del conjunto, no del apto).
+  // `initialIdx` permite abrir directo en lightbox fullscreen cuando el
+  // user clickea sobre una foto del preview 2x4. Botón "Ver todas" usa null
+  // para arrancar en la grilla.
   const [edificioFotosOpen, setEdificioFotosOpen] = useState(false)
+  const [edificioFotosInitialIdx, setEdificioFotosInitialIdx] = useState<number | null>(null)
 
   // Volver al estado previo (resultados con fechas/huéspedes preservados) usando
   // el historial del browser. Si el usuario aterrizó directo en /catalogo/[slug]
@@ -470,14 +474,17 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
           )}
 
           {/* Espacios pensados para relajarte — amenidades del EDIFICIO
-              (no del apto) + botón "Ver fotos del edificio".
-              Solo se monta si hay algo que mostrar (amenidades o fotos). */}
+              (no del apto) + preview 2x4 con las primeras 4 fotos +
+              botón "Ver todas". Solo se monta si hay algo que mostrar. */}
           {((apartment.edificioAmenidadesGrouped?.length ?? 0) > 0 ||
             (apartment.edificioFotos?.length ?? 0) > 0) && (
             <EdificioAmenidadesSection
               amenidades={apartment.edificioAmenidadesGrouped ?? []}
-              onOpenFotos={() => setEdificioFotosOpen(true)}
-              tieneFotos={(apartment.edificioFotos?.length ?? 0) > 0}
+              fotos={apartment.edificioFotos ?? []}
+              onOpenFotos={(idx) => {
+                setEdificioFotosInitialIdx(idx)
+                setEdificioFotosOpen(true)
+              }}
             />
           )}
 
@@ -754,9 +761,13 @@ export default function ApartmentDetailClient({ apartment }: ApartmentDetailClie
       {(apartment.edificioFotos?.length ?? 0) > 0 && (
         <EdificioFotosModal
           open={edificioFotosOpen}
-          onClose={() => setEdificioFotosOpen(false)}
+          onClose={() => {
+            setEdificioFotosOpen(false)
+            setEdificioFotosInitialIdx(null)
+          }}
           fotos={apartment.edificioFotos ?? []}
           edificioNombre={apartment.edificio}
+          initialLightboxIndex={edificioFotosInitialIdx}
         />
       )}
     </div>
