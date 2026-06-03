@@ -61,6 +61,78 @@ interface SearchParams {
   breakdown?: Guests
 }
 
+const BUILDING_SECTIONS = [
+  { building: 'Reserva del Mar', title: 'lo que se siente', aliases: ['Reserva del Mar', 'Reserva Del Mar'] },
+  { building: 'Reserva del Mar II', title: 'lo que se ve', aliases: ['Reserva del Mar II', 'Reserva Del Mar 2', 'Reserva del Mar 2'] },
+  { building: 'Salguero Suites', title: 'lo que se respira', aliases: ['Salguero Suites', 'Salguero Suite'] },
+  { building: 'Ámbar Roca', title: 'lo que brilla', aliases: ['Ámbar Roca', 'Ambar Roca'] },
+  { building: 'Bello Horizonte', title: 'lo que ilumina', aliases: ['Bello Horizonte'] },
+  { building: 'Samaria', title: 'lo que vive', aliases: ['Samaria'] },
+]
+
+function normalizeBuildingName(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function getBuildingName(apartment: PublicApartamentoSummary): string {
+  return apartment.edificio.nombre
+}
+
+function groupApartmentsByBuilding(apartments: PublicApartamentoSummary[]) {
+  const grouped = new Map<string, PublicApartamentoSummary[]>()
+  const displayNames = new Map<string, string>()
+
+  apartments.forEach((apartment) => {
+    const building = getBuildingName(apartment)
+    const buildingKey = normalizeBuildingName(building)
+    const buildingApartments = grouped.get(buildingKey) ?? []
+    buildingApartments.push(apartment)
+    grouped.set(buildingKey, buildingApartments)
+    if (!displayNames.has(buildingKey)) displayNames.set(buildingKey, building)
+  })
+
+  const configuredSections = BUILDING_SECTIONS.map((section) => ({
+    building: section.building,
+    title: section.title,
+    apartments: Array.from(
+      new Map(
+        Array.from(new Set(section.aliases.map(normalizeBuildingName)))
+          .flatMap((alias) => grouped.get(alias) ?? [])
+          .map((apartment) => [apartment.id, apartment]),
+      ).values(),
+    ),
+  }))
+
+  const configuredBuildingNames = new Set(
+    BUILDING_SECTIONS.flatMap((section) => section.aliases.map(normalizeBuildingName)),
+  )
+  const fallbackSections = Array.from(grouped.entries())
+    .filter(([building]) => !configuredBuildingNames.has(building))
+    .map(([building, buildingApartments]) => ({
+      building: displayNames.get(building) ?? building,
+      title: 'más opciones para descubrir',
+      apartments: buildingApartments,
+    }))
+
+  return [...configuredSections, ...fallbackSections]
+}
+
+type BuildingSection = ReturnType<typeof groupApartmentsByBuilding>[number]
+
+function toSectionId(value: string) {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+}
+
 // ── Variantes Framer Motion ──────────────────────────────────────────────────────
 const containerVariants = {
   hidden: {},
@@ -182,10 +254,10 @@ function HeroPanel({
   defaultGuests?: Partial<Guests>
 }) {
   return (
-    <div className='w-full px-4 md:px-8 xl:px-14 pt-20 pb-6 lg:pt-24 lg:pb-10 flex items-start lg:items-center lg:min-h-screen'>
+    <div className='w-full px-4 md:px-8 xl:px-14 pt-20 pb-6 lg:pt-24 lg:pb-10 flex items-start lg:items-center '>
       <div
         className='relative w-full max-w-6xl mx-auto rounded-3xl flex items-center shadow-xl'
-        style={{ minHeight: '560px' }}
+        style={{ minHeight: '550px' }}
       >
         {/* Fondo */}
         <div className='absolute inset-0 rounded-3xl overflow-hidden'>
@@ -348,13 +420,77 @@ function toApartmentShape(summary: PublicApartamentoSummary): Apartment {
 // Catálogo completo visible en estado idle (debajo del hero). Muestra todas las
 // unidades disponibles con la card minimal estilo Airbnb (`ApartmentSearchCard`).
 function AllApartmentsSection({ apartments }: { apartments: PublicApartamentoSummary[] }) {
+  const [selectedBuilding, setSelectedBuilding] = useState<string>('all')
+
   if (!apartments.length) return null
 
+  const buildingSections = groupApartmentsByBuilding(apartments)
+  const visibleSections =
+    selectedBuilding === 'all'
+      ? buildingSections
+      : buildingSections.filter((section) => section.building === selectedBuilding)
+
+  const totalApartments = buildingSections.reduce((total, section) => total + section.apartments.length, 0)
+
+  function getSectionCount(section: BuildingSection) {
+    return section.apartments.length
+  }
+
   return (
-    <Section id='todos' titulo='Nuestros alojamientos' acento='pink' etiqueta='Catálogo'>
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8'>
-        {apartments.map((apt) => (
-          <ApartmentSearchCard key={apt.id} apartment={apt} />
+    <Section id='todos' titulo='Colección Océano Livic' acento='pink' etiqueta='Catálogo'>
+      <div className='mb-10 -mt-4 flex flex-wrap items-center gap-2'>
+        <button
+          type='button'
+          onClick={() => setSelectedBuilding('all')}
+          className={`rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
+            selectedBuilding === 'all'
+              ? 'border-livic-pink bg-livic-pink text-white'
+              : 'border-gray-200 bg-white text-gray-600 hover:border-livic-pink hover:text-livic-pink'
+          }`}
+        >
+          Todos ({totalApartments})
+        </button>
+
+        {buildingSections.map((section) => (
+          <button
+            key={section.building}
+            type='button'
+            onClick={() => setSelectedBuilding(section.building)}
+            className={`rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
+              selectedBuilding === section.building
+                ? 'border-livic-pink bg-livic-pink text-white'
+                : 'border-gray-200 bg-white text-gray-600 hover:border-livic-pink hover:text-livic-pink'
+            }`}
+          >
+            {section.building} ({getSectionCount(section)})
+          </button>
+        ))}
+      </div>
+
+      <div className='space-y-12'>
+        {visibleSections.map((section) => (
+          <section key={section.building} aria-labelledby={`building-${toSectionId(section.building)}`}>
+            <div className='mb-5 rounded-3xl border border-livic-pink/15 bg-gradient-to-r from-livic-pink/10 via-white to-livic-purple/10 px-5 py-5 md:px-7'>
+              <h3 id={`building-${toSectionId(section.building)}`} className='text-2xl md:text-3xl font-black text-gray-900'>
+                {section.building}
+              </h3>
+              <p className='mt-1 text-lg md:text-xl font-semibold text-livic-pink'>
+                {section.title}
+              </p>
+            </div>
+
+            {section.apartments.length > 0 ? (
+              <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8'>
+                {section.apartments.map((apt) => (
+                  <ApartmentSearchCard key={apt.id} apartment={apt} />
+                ))}
+              </div>
+            ) : (
+              <div className='rounded-3xl border border-dashed border-gray-200 bg-gray-50/80 px-6 py-8 text-sm font-medium text-gray-400'>
+                Próximamente alojamientos disponibles en esta categoría.
+              </div>
+            )}
+          </section>
         ))}
       </div>
     </Section>
@@ -630,7 +766,7 @@ function SearchFlowImpl({ apartments }: { apartments: PublicApartamentoSummary[]
   )
 }
 
-export default function SearchFlow(props: { apartments: PublicApartamentoSummary[] }) {
+export default function SearchFlow(props: { apartments: PublicApartamentoSummary[] }) {  
   return (
     <Suspense fallback={null}>
       <SearchFlowImpl {...props} />

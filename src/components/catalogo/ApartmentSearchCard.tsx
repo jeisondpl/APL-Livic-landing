@@ -100,7 +100,7 @@ export default function ApartmentSearchCard({
   const hasGallery = sliderPhotos.length > 0;
 
   // Título solicitado: nombre del apartamento + edificio
-  const title = `${apartment.nombre} · ${apartment.edificio.nombre}`;
+  const title = `${apartment.tituloAnuncio} · ${apartment.edificio.nombre}`;
 
   // Subtítulo: ciudad, departamento
   const subtitle = `${apartment.edificio.ciudad}, ${apartment.edificio.departamento}`;
