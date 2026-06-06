@@ -264,6 +264,14 @@ export default function Nav() {
             Pricing &amp; Plan
             <ActiveDot visible={isRouteActive("/pricing")} />
           </Link>
+          <Link
+            href="/propuesta-pms"
+            aria-current={isRouteActive("/propuesta-pms") ? "page" : undefined}
+            className={linkClass(isRouteActive("/propuesta-pms"))}
+          >
+            Para operadores
+            <ActiveDot visible={isRouteActive("/propuesta-pms")} />
+          </Link>
         </div>
 
         {/* ════════════════════════════════════════════════
@@ -402,6 +410,13 @@ export default function Nav() {
             className={mobileLinkClass(isRouteActive("/pricing"))}
           >
             Pricing &amp; Plan
+          </Link>
+          <Link
+            href="/propuesta-pms"
+            aria-current={isRouteActive("/propuesta-pms") ? "page" : undefined}
+            className={mobileLinkClass(isRouteActive("/propuesta-pms"))}
+          >
+            Para operadores
           </Link>
 
           {/* CTA WhatsApp dentro del drawer (extra utility, además del header) */}

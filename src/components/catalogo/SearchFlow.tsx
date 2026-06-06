@@ -306,7 +306,8 @@ function HeroPanel({
             </ul>
           </motion.div>
 
-          {/* Panel de búsqueda — entrada desde la derecha */}
+          {/* 
+           — entrada desde la derecha */}
           <motion.div
             initial={{ opacity: 0, x: 60 }}
             animate={{ opacity: 1, x: 0 }}
